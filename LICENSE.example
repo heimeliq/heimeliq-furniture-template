@@ -1,0 +1,34 @@
+CERN Open Hardware Licence Version 2 – Strongly Reciprocal (CERN-OHL-S-2.0)
+
+Der vollstaendige Lizenztext ist verfuegbar unter:
+https://ohwr.org/cern_ohl_s_v2.txt
+https://spdx.org/licenses/CERN-OHL-S-2.0.html
+
+----------------------------------------------------------------------------
+
+Praeambel
+
+Die CERN Open Hardware Licences sind Lizenzen fuer Designerinnen und
+Designer in jedem Kontext, in dem offene Weitergabe von Designs gewuenscht
+ist. Drei Varianten sind verfuegbar: eine permissive Variante (CERN-OHL-P),
+eine schwach reziproke Variante (CERN-OHL-W) und die stark reziproke Variante
+(CERN-OHL-S).
+
+In der stark reziproken Variante (diese Lizenz) muss modifizierter Quellcode
+unter dieser Lizenz verfuegbar gemacht werden, wann immer dieser modifizierte
+Quellcode oder ein darauf basierendes Produkt verbreitet wird.
+
+----------------------------------------------------------------------------
+
+HINWEIS
+
+Diese Datei enthaelt nur einen Kurzhinweis. Der vollstaendige, autoritative
+Lizenztext ist verfuegbar unter https://ohwr.org/cern_ohl_s_v2.txt sowie in
+der oben genannten SPDX-Lizenzliste. Vor der Veroeffentlichung eines
+heimeliQ-Moebel-Repos bitte diesen Kurzhinweis durch den vollstaendigen
+Lizenztext ersetzen oder einen deutlich sichtbaren Verweis auf die
+autoritative Quelle einfuegen.
+
+----------------------------------------------------------------------------
+
+SPDX-License-Identifier: CERN-OHL-S-2.0

@@ -1,0 +1,121 @@
+name: Validate
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validators
+        run: |
+          pip install --upgrade pip
+          pip install tomli jsonschema requests
+
+      - name: Validate okh.toml against OKH schema
+        run: |
+          python <<'PY'
+          import tomli, json, sys, urllib.request, jsonschema
+          with open("okh.toml", "rb") as f:
+              data = tomli.load(f)
+          url = "https://raw.githubusercontent.com/iop-alliance/OpenKnowHow/master/src/schema/okh.schema.json"
+          schema = json.loads(urllib.request.urlopen(url).read())
+          try:
+              jsonschema.validate(data, schema)
+              print("okh.toml: OK")
+          except jsonschema.ValidationError as e:
+              print(f"okh.toml: FAIL\n{e.message}\nPath: {list(e.path)}")
+              sys.exit(1)
+          PY
+
+      - name: Validate heimeliq.toml against local schema
+        run: |
+          python <<'PY'
+          import tomli, json, sys, jsonschema
+          with open("heimeliq.toml", "rb") as f:
+              data = tomli.load(f)
+          with open("heimeliq.schema.json") as f:
+              schema = json.load(f)
+          try:
+              jsonschema.validate(data, schema)
+              print("heimeliq.toml: OK")
+          except jsonschema.ValidationError as e:
+              print(f"heimeliq.toml: FAIL\n{e.message}\nPath: {list(e.path)}")
+              sys.exit(1)
+          PY
+
+      - name: Determine repo kind (template vs. furniture)
+        id: kind
+        run: |
+          # Wenn LICENSE.example UND README.example.md noch existieren, ist dies das
+          # Template-Repo selbst. Wenn beide fehlen und stattdessen LICENSE/README.md
+          # die Moebel-Variante sind, ist es ein Moebel-Repo.
+          if [ -f "LICENSE.example" ] && [ -f "README.example.md" ]; then
+            echo "kind=template" >> $GITHUB_OUTPUT
+            echo "Erkannt als Template-Repo."
+          else
+            echo "kind=furniture" >> $GITHUB_OUTPUT
+            echo "Erkannt als Moebel-Repo."
+          fi
+
+      - name: Furniture-Repo – Example files must be renamed
+        if: steps.kind.outputs.kind == 'furniture'
+        run: |
+          FAIL=0
+          if [ -f "LICENSE.example" ]; then
+            echo "LICENSE.example existiert noch – bitte zu LICENSE umbenennen."
+            FAIL=1
+          fi
+          if [ -f "README.example.md" ]; then
+            echo "README.example.md existiert noch – bitte zu README.md umbenennen."
+            FAIL=1
+          fi
+          if [ ! -f "LICENSE" ]; then
+            echo "LICENSE fehlt – bitte LICENSE.example zu LICENSE umbenennen."
+            FAIL=1
+          fi
+          if [ ! -f "README.md" ]; then
+            echo "README.md fehlt – bitte README.example.md zu README.md umbenennen."
+            FAIL=1
+          fi
+          exit $FAIL
+
+      - name: Check for FIXME placeholders (only if published)
+        if: steps.kind.outputs.kind == 'furniture'
+        run: |
+          STATUS=$(python -c "import tomli; d=tomli.load(open('heimeliq.toml','rb')); print(d.get('status',''))")
+          if [ "$STATUS" = "published" ]; then
+            if grep -RIn "FIXME" --include="*.md" --include="*.toml" --include="*.json" --include="LICENSE" .; then
+              echo "FIXME-Platzhalter gefunden, obwohl status=published. Bitte ersetzen."
+              exit 1
+            fi
+            echo "Keine FIXME-Platzhalter – OK."
+          else
+            echo "status=$STATUS (nicht 'published'), FIXME-Check uebersprungen."
+          fi
+
+      - name: Check required media files (only if published)
+        if: steps.kind.outputs.kind == 'furniture'
+        run: |
+          STATUS=$(python -c "import tomli; d=tomli.load(open('heimeliq.toml','rb')); print(d.get('status',''))")
+          if [ "$STATUS" = "published" ] && [ ! -f "media/hero.jpg" ]; then
+            echo "status=published, aber media/hero.jpg fehlt."
+            exit 1
+          fi
+          if [ ! -f "media/hero.jpg" ] && [ ! -f "media/hero.jpg.placeholder" ]; then
+            echo "Weder media/hero.jpg noch der Placeholder existiert."
+            exit 1
+          fi
+          echo "Medien-Check OK."

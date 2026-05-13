@@ -1,0 +1,71 @@
+# heimeliQ-Erweiterungen
+# Diese Datei ergänzt das OKH-Manifest um heimeliQ-spezifische Felder, die
+# der allgemeine OKH-Standard nicht abbildet (Reihen-Zugehörigkeit, externe
+# Drittteile, Versionsbezüge etc.).
+#
+# Gegen heimeliq.schema.json validierbar.
+
+"$schema" = "./heimeliq.schema.json"
+
+# Version dieser Vorlage, auf der das Möbel-Repo basiert.
+# Wird bei jedem Template-Upgrade aktualisiert (siehe MIGRATIONS.md).
+heimeliq-template-version = "0.1.0"
+
+# Version dieses Möbels (SemVer).
+# Erhöhen bei: PATCH = Doku-Fixes, MINOR = neue Optionen, MAJOR = Konstruktionsänderung.
+version = "0.1.0"
+
+# Slug für URLs auf der Website. Sollte mit dem Repo-Namen übereinstimmen
+# (ohne das "heimeliq-"-Präfix).
+slug = "FIXME-reihe-typ-nr"          # z. B. "massiq-sideboard-001"
+
+# Reihe, zu der dieses Möbel gehört. Pflicht.
+# Erlaubte Werte: "massiq", "workaholiq", "keiliq".
+series = "FIXME"
+
+# Möbel-Typ (frei, aber konsistent halten).
+type = "FIXME"                        # z. B. "sideboard", "werkbank", "werkzeughalter"
+
+# Status: "draft" | "published" | "archived"
+status = "draft"
+
+# ===========================================================================
+# Externe Bauteile (Standard- und Drittteile, nicht open source)
+# ===========================================================================
+# Schrauben, Beschläge, Scharniere etc. Diese stehen NICHT im OKH-`part`-Array,
+# weil sie keine eigene Open-Hardware-Doku haben.
+# IDs: E001, E002, ... (möbel-lokal eindeutig)
+
+[[external_parts]]
+heimeliq-part-id = "E001"
+name = "FIXME Bezeichnung"            # z. B. "Senkkopfschraube"
+standard = "FIXME"                    # z. B. "DIN 7991", "ISO 10642"
+material = "FIXME"                    # z. B. "Edelstahl A2"
+dimensions = "FIXME"                  # z. B. "M6x40"
+quantity = 0
+
+# Optional: Bezugsquellen (rein informativ, keine Verkaufslogik)
+# suppliers = ["lokal", "wuerth.de"]
+
+# ===========================================================================
+# Empfohlene Holzarten (für Konstruktion bekannt geeignet)
+# ===========================================================================
+# Nur die Holzarten, in denen das Möbel konstruktiv funktioniert.
+# Preisliche Bewertung passiert im Shop, NICHT hier.
+
+[[wood_options]]
+species = "FIXME"                     # z. B. "Eberesche"
+origin = "regional"
+recommended = true
+
+# ===========================================================================
+# Pflege & Nachhaltigkeit (informativ)
+# ===========================================================================
+
+[care]
+surface_treatment = "FIXME"           # z. B. "Hartwachs-Öl"
+recommended_products = []
+
+[sustainability]
+wood_source = "FIXME"                 # z. B. "regional, Bayerischer Wald"
+co2_documented = false

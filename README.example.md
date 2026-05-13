@@ -1,0 +1,172 @@
+# FIXME Möbelname
+
+> FIXME ein- bis zweisätzige Beschreibung – was ist es, was macht es besonders.
+
+[![Lizenz: CERN-OHL-S-2.0](https://img.shields.io/badge/Lizenz-CERN--OHL--S--2.0-blue)](LICENSE)
+[![heimeliQ](https://img.shields.io/badge/heimeliQ-FIXME--reihe-green)](https://heimeliq.de/reihen/FIXME-reihe)
+[![Status](https://img.shields.io/badge/Status-FIXME--status-orange)](#)
+
+![Hauptbild](media/hero.jpg)
+
+---
+
+## Überblick
+
+FIXME 2–4 Sätze: Zu welcher Reihe gehört das Möbel? Welche Konstruktion? Welches Material? Für wen ist es gedacht?
+
+Vollständige Hintergrundgeschichte und Materialherkunft: siehe [docs/de/story.md](docs/de/story.md).
+
+---
+
+## Gesamtmaße
+
+| Eigenschaft | Maß |
+| --- | --- |
+| Breite | FIXME mm |
+| Tiefe | FIXME mm |
+| Höhe | FIXME mm |
+| Materialstärke Korpus | FIXME mm |
+| Materialstärke Einbauten | FIXME mm |
+| Materialstärke Rückwand | FIXME mm |
+| Masse (gesamt) | FIXME kg |
+
+Maschinenlesbar in [okh.toml](okh.toml) unter `outer-dimensions` und `mass`.
+
+---
+
+## Material
+
+| Element | Material | Herkunft |
+| --- | --- | --- |
+| Korpus | FIXME Massivholz-Art | FIXME regional |
+| Einbauten | FIXME | FIXME |
+| Rückwand | FIXME Sperrholz | FIXME |
+| Verbinder | FIXME (z. B. Lamellos, Dübel) | – |
+| Oberfläche | FIXME (z. B. Hartwachs-Öl) | – |
+
+**Was nicht verwendet wird**: keine Spanplatten, keine synthetischen Leime, keine übermäßige Oberflächenbehandlung. Konsequent regional und naturbelassen.
+
+---
+
+## Stückliste
+
+Vollständige Stückliste: siehe [docs/de/bom.md](docs/de/bom.md).
+Maschinenlesbar in [okh.toml](okh.toml) (`[[part]]`) und [heimeliq.toml](heimeliq.toml) (`[[external_parts]]`).
+
+### Eigene Bauteile (Self)
+
+| ID | Bezeichnung | Maße (B × T × H, mm) | Anzahl |
+| --- | --- | --- | --- |
+| S001 | FIXME | FIXME | FIXME |
+| S002 | FIXME | FIXME | FIXME |
+
+### Externe Teile
+
+| ID | Bezeichnung | Norm / Hersteller | Anzahl |
+| --- | --- | --- | --- |
+| E001 | FIXME | FIXME | FIXME |
+
+---
+
+## Konstruktionsdetails
+
+FIXME: Zentrale konstruktive Merkmale, in 3–6 Stichpunkten oder Tabellen.
+
+### Verbindungen
+
+- **FIXME**: z. B. Korpus mit Gehrung verbunden
+- **FIXME**: z. B. Zwischenwände gedübelt
+- **FIXME**: Rückwand in umlaufender Nut
+
+### Nuten und Aussparungen
+
+| Eigenschaft | Maß |
+| --- | --- |
+| FIXME | FIXME |
+
+Bauanleitung Schritt für Schritt: siehe [docs/de/build-guide.md](docs/de/build-guide.md).
+
+---
+
+## Werkzeuge
+
+| Werkzeug | Verwendung |
+| --- | --- |
+| FIXME | FIXME |
+
+Detaillierte Werkzeugliste in [docs/de/build-guide.md](docs/de/build-guide.md).
+
+---
+
+## Aufbau zu Hause
+
+Wenn du das Möbel von heimeliQ in fertiger Form bekommst, hilft dir [docs/de/assembly.md](docs/de/assembly.md) bei der Montage.
+
+---
+
+## Pflege
+
+Siehe [docs/de/care.md](docs/de/care.md).
+
+---
+
+## Dateien
+
+### 3D-Modelle und Zeichnungen
+
+- **FreeCAD-Quelle**: [`cad/source/`](cad/source/) (Originaldatei, frei bearbeitbar)
+- **STEP**: [`cad/exports/`](cad/exports/) (neutraler Austausch, mit jedem CAD-System öffenbar)
+- **STL**: [`cad/exports/`](cad/exports/) (für 3D-Druck und Vorschau)
+- **GLB**: [`cad/exports/`](cad/exports/) (Web-3D-Viewer)
+- **Technische Zeichnungen**: [`cad/drawings/`](cad/drawings/) (PDF)
+
+### Software
+
+- **FreeCAD** – Open Source, kostenlos – <https://www.freecad.org/>
+- **Version** verwendet: FIXME (z. B. 1.0.x)
+
+---
+
+## Versionierung
+
+Aktuelle Version: siehe `version` in [heimeliq.toml](heimeliq.toml).
+Versionshistorie: [changelog.md](changelog.md).
+
+Versionsschritte folgen [Semantic Versioning](https://semver.org/lang/de/):
+
+- **MAJOR** – Konstruktion grundlegend geändert.
+- **MINOR** – Neue Option (z. B. weitere Holzart) oder zusätzliche Detailzeichnung.
+- **PATCH** – Tippfehler in Anleitung, besseres Foto, Klarstellung.
+
+---
+
+## Kaufen
+
+Dieses Möbel kann auch fertig gebaut bei heimeliQ bestellt werden: <https://heimeliq.de/moebel/FIXME-slug>
+
+Preis, Lieferzeit und Versandbedingungen werden im Shop verwaltet, nicht in diesem Repository.
+
+---
+
+## Open Source / Selber bauen
+
+Du darfst dieses Möbel nach den Plänen in diesem Repository **selbst bauen oder bauen lassen**, **modifizieren** und **weitergeben**. Die einzige Auflage: Wenn du Änderungen weitergibst, müssen sie wieder unter derselben Lizenz (CERN-OHL-S-2.0) verfügbar sein. Damit bleibt das Wissen frei.
+
+Wenn du dieses Möbel gebaut hast – ob nach Original oder mit Änderungen – freue ich mich über ein Foto und eine Rückmeldung: FIXME@heimeliq.de.
+
+---
+
+## Lizenz
+
+Dieses Möbel und seine Dokumentation stehen unter [CERN-OHL-S-2.0](LICENSE).
+
+**Keine Gewährleistung für die Richtigkeit der Maße – vor dem Zuschnitt bitte nachmessen.**
+
+---
+
+## Verwandte Links
+
+- heimeliQ-Webseite: <https://heimeliq.de>
+- Reihe FIXME-reihe: <https://heimeliq.de/reihen/FIXME-reihe>
+- Open Know-How Standard: <https://github.com/iop-alliance/OpenKnowHow>
+- CERN Open Hardware Licence: <https://ohwr.org/cern_ohl_s_v2.txt>

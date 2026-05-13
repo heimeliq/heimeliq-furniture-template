@@ -1,0 +1,99 @@
+# OKH-Manifest – Open Know-How Standard, Version 2.4
+# Spezifikation: https://github.com/iop-alliance/OpenKnowHow
+# Schema:        https://w3id.org/oseg/schema/okh.schema.json
+#
+# Dieses Manifest beschreibt das Möbel als Open-Source-Hardware-Werk.
+# Verkaufsdaten (Preise, Lieferbedingungen, Bestände) gehören NICHT hier rein
+# - sie werden separat im Shop-Backend (Medusa) verwaltet.
+#
+# Pflichtfelder: okhv, name, repo, license, licensor, function
+
+"$schema" = "https://w3id.org/oseg/schema/okh.schema.json"
+
+okhv = "2.4"
+
+# --- Identität ---
+name = "FIXME Möbelname"
+repo = "https://github.com/heimeliq/FIXME-heimeliq-<reihe>-<typ>-<nr>"
+
+# --- Lizenz ---
+license = "CERN-OHL-S-2.0"
+licensor = "FIXME Vorname Nachname (FIXME-nickname) <FIXME@heimeliq.de>"
+
+# --- Beschreibung ---
+function = """
+FIXME: Was tut dieses Möbel? Wofür ist es gemacht?
+Wer profitiert davon, welches Problem löst es?
+Mehrere Sätze sind erlaubt und erwünscht – dieses Feld wird in OSH-Suchen
+als Hauptbeschreibung verwendet.
+"""
+
+# --- Dokumentations-Sprache(n) ---
+documentation-language = "de"
+
+# --- Reifegrad der Dokumentation ---
+# ODRL-1: Dokumentationsprozess gestartet
+# ODRL-2: Kollaborative Dokumentation in Arbeit
+# ODRL-3: Vollständige Dokumentation
+# ODRL-3*: Vollständige Dokumentation auditiert
+# ODRL-4: Vollständige Doku für Produktqualifikation
+documentation-readiness-level = "ODRL-2"
+
+# --- Technologie-spezifische Dokumentationskriterien ---
+# MEC: Mechanisch, ASM: Assembly, CNC: CNC-gefertigt, etc.
+# Siehe: https://w3id.org/oseg/ont/tsdc/core
+tsdc = ["MEC", "ASM"]
+
+# --- Organisation ---
+[[organization]]
+name = "heimeliq"
+url = "https://heimeliq.de"
+
+# --- Äußere Abmessungen des Möbels (in mm) ---
+[outer-dimensions]
+width = 0    # FIXME
+depth = 0    # FIXME
+height = 0   # FIXME
+
+# --- Masse des Möbels (in Gramm) ---
+mass = 0     # FIXME
+
+# --- Hauptbilder (für Außenwirkung) ---
+[[image]]
+location = "media/hero.jpg"
+slots = ["photo-thing-main", "model-main"]
+tags = ["photo"]
+depicts = "FIXME: kurze Beschreibung des Hauptbildes"
+
+# --- Bauanleitung / Fertigungsanweisungen ---
+manufacturing-instructions = "docs/de/build-guide.md"
+
+# --- Stückliste ---
+bom = "docs/de/bom.md"
+
+# --- README ---
+readme = "README.md"
+
+# ===========================================================================
+# Bauteile (eigene, open-source Komponenten)
+# ===========================================================================
+# Jedes Bauteil bekommt eine möbel-lokale ID: S001, S002, ...
+# Externe Drittteile (Schrauben, Beschläge) stehen NICHT hier, sondern in
+# heimeliq.toml unter [[external_parts]].
+
+[[part]]
+name = "FIXME Bauteilname (z. B. Korpus-Seitenwand links)"
+source = "cad/source/FIXME-bauteil-01.FCStd"
+export = ["cad/exports/FIXME-bauteil-01.step", "cad/exports/FIXME-bauteil-01.stl"]
+mass = 0                    # FIXME, in Gramm
+heimeliq-part-id = "S001"
+tsdc = ["MEC"]
+
+[part.outer-dimensions]
+width = 0     # FIXME
+depth = 0     # FIXME
+height = 0    # FIXME
+
+# Weitere Bauteile als zusätzliche [[part]]-Blöcke ergänzen.
+# Die heimeliq-part-id läuft pro Möbel-Repo bei S001 los und ist
+# möbel-lokal eindeutig.

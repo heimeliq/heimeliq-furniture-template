@@ -1,0 +1,42 @@
+version = 1
+
+# REUSE-konforme Lizenzangaben fuer dieses Repository.
+# Siehe https://reuse.software/spec/ fuer Details.
+#
+# Zwei Lizenz-Welten:
+# - MIT: Template-Strukturdateien (Workflows, Schemas, README/LICENSE des Templates).
+# - CERN-OHL-S-2.0: alles, was Inhalt des Moebels werden wird (Manifeste,
+#   Doku-Markdown, Bilder, CAD-Dateien, Beispiel-Vorlagen mit .example-Suffix).
+
+# --- MIT: Template selbst ---
+[[annotations]]
+path = [
+  "README.md",
+  "LICENSE",
+  "CHANGELOG.md",
+  "MIGRATIONS.md",
+  "REUSE.toml",
+  "heimeliq.schema.json",
+  ".github/workflows/**",
+  ".gitignore",
+  ".gitkeep",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "FIXME-Jahr FIXME Vorname Nachname (FIXME-nickname) <FIXME@heimeliq.de>"
+SPDX-License-Identifier = "MIT"
+
+# --- CERN-OHL-S-2.0: Inhalte, die zum Moebel-Repo werden ---
+[[annotations]]
+path = [
+  "README.example.md",
+  "LICENSE.example",
+  "okh.toml",
+  "heimeliq.toml",
+  "changelog.md",
+  "docs/**",
+  "cad/**",
+  "media/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "FIXME-Jahr FIXME Vorname Nachname (FIXME-nickname) <FIXME@heimeliq.de>"
+SPDX-License-Identifier = "CERN-OHL-S-2.0"
