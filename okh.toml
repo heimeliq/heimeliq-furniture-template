@@ -7,9 +7,23 @@
 # - sie werden separat im Shop-Backend (Medusa) verwaltet.
 #
 # Pflichtfelder: okhv, name, repo, license, licensor, function
+#
+# ----------------------------------------------------------------------------
+# WICHTIG zur TOML-Reihenfolge:
+# Alle Top-Level-Felder (skalare Werte und einfache Arrays) MÜSSEN vor dem
+# ersten Section-Header ([...] oder [[...]]) stehen. Wird ein Top-Level-Feld
+# unter einer Section deklariert, wird es TOML-spezifikationsgemäß zu einem
+# Sub-Feld dieser Section - das ist meist nicht gewollt und führt zu stillen
+# Validierungsfehlern.
+# ----------------------------------------------------------------------------
+
+# ============================================================================
+# TOP-LEVEL-FELDER (alle vor der ersten Section!)
+# ============================================================================
 
 "$schema" = "https://w3id.org/oseg/schema/okh.schema.json"
 
+# --- OKH-Version ---
 okhv = "2.4"
 
 # --- Identität ---
@@ -44,10 +58,17 @@ documentation-readiness-level = "ODRL-2"
 # Siehe: https://w3id.org/oseg/ont/tsdc/core
 tsdc = ["MEC", "ASM"]
 
-# --- Organisation ---
-[[organization]]
-name = "heimeliq"
-url = "https://heimeliq.de"
+# --- Masse des Möbels (in Gramm) ---
+mass = 0     # FIXME
+
+# --- Pfade zu Dokumentations-Dateien (relative Pfade im Repo) ---
+manufacturing-instructions = "docs/de/build-guide.md"
+bom = "docs/de/bom.md"
+readme = "README.md"
+
+# ============================================================================
+# SECTIONS (alle Top-Level-Felder müssen oben stehen!)
+# ============================================================================
 
 # --- Äußere Abmessungen des Möbels (in mm) ---
 [outer-dimensions]
@@ -55,31 +76,30 @@ width = 0    # FIXME
 depth = 0    # FIXME
 height = 0   # FIXME
 
-# --- Masse des Möbels (in Gramm) ---
-mass = 0     # FIXME
+# --- Organisation ---
+[[organization]]
+name = "heimeliq"
+url = "https://heimeliq.de"
 
 # --- Hauptbilder (für Außenwirkung) ---
+# Hier können beliebig viele [[image]]-Einträge stehen. Für jedes weitere
+# Bild einen neuen [[image]]-Block ergänzen.
 [[image]]
 location = "media/hero.jpg"
 slots = ["photo-thing-main", "model-main"]
 tags = ["photo"]
 depicts = "FIXME: kurze Beschreibung des Hauptbildes"
 
-# --- Bauanleitung / Fertigungsanweisungen ---
-manufacturing-instructions = "docs/de/build-guide.md"
-
-# --- Stückliste ---
-bom = "docs/de/bom.md"
-
-# --- README ---
-readme = "README.md"
-
-# ===========================================================================
+# ============================================================================
 # Bauteile (eigene, open-source Komponenten)
-# ===========================================================================
+# ============================================================================
 # Jedes Bauteil bekommt eine möbel-lokale ID: S001, S002, ...
 # Externe Drittteile (Schrauben, Beschläge) stehen NICHT hier, sondern in
 # heimeliq.toml unter [[external_parts]].
+#
+# Wichtig: outer-dimensions als Inline-Table im [[part]]-Eintrag verwenden,
+# nicht als Sub-Section [part.outer-dimensions] - letzteres wird bei mehreren
+# Bauteilen mehrdeutig.
 
 [[part]]
 name = "FIXME Bauteilname (z. B. Korpus-Seitenwand links)"
@@ -88,11 +108,7 @@ export = ["cad/exports/FIXME-bauteil-01.step", "cad/exports/FIXME-bauteil-01.stl
 mass = 0                    # FIXME, in Gramm
 heimeliq-part-id = "S001"
 tsdc = ["MEC"]
-
-[part.outer-dimensions]
-width = 0     # FIXME
-depth = 0     # FIXME
-height = 0    # FIXME
+outer-dimensions = { width = 0, depth = 0, height = 0 }  # FIXME, in mm
 
 # Weitere Bauteile als zusätzliche [[part]]-Blöcke ergänzen.
 # Die heimeliq-part-id läuft pro Möbel-Repo bei S001 los und ist

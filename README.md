@@ -8,7 +8,7 @@ Jedes Möbel von heimeliQ lebt in einem eigenen Git-Repository. Diese Vorlage de
 
 | Komponente | Version |
 | --- | --- |
-| heimeliQ Template | `0.1.0` |
+| heimeliQ Template | `0.1.1` |
 | OKH-Manifest | `2.4` |
 | Lizenz dieses Templates | `MIT` |
 | Lizenz daraus erzeugter Möbel-Repos | `CERN-OHL-S-2.0` |
