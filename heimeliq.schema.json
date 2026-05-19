@@ -12,7 +12,8 @@
     "series",
     "type",
     "status",
-    "forest"
+    "forest",
+    "assemblies"
   ],
   "properties": {
     "heimeliq-template-version": {
@@ -36,7 +37,7 @@
       "enum": ["massiq", "workaholiq", "keiliq"]
     },
     "type": {
-      "description": "Möbel-Typ als Metadatenfeld für Filter/Suche. Kein Teil der ID. Beispiele: 'sideboard', 'werkbank', 'werkzeughalter'.",
+      "description": "Möbel-Typ als Metadatenfeld für Filter/Suche. Kein Teil der ID.",
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]*$"
     },
@@ -55,50 +56,34 @@
       "enum": ["draft", "published", "archived"]
     },
     "forest": {
-      "description": "Wald-Namensgeber dieses Möbels. Jedes Möbel trägt den Namen eines real existierenden Waldes; der Waldname ist möbel-eindeutig.",
+      "description": "Wald-Namensgeber dieses Möbels.",
       "type": "object",
       "required": ["id", "name", "region", "country"],
       "properties": {
         "id": {
-          "description": "URL-taugliche Kurzform des Waldnamens, identisch mit dem letzten Segment des Repo-Namens.",
           "type": "string",
           "pattern": "^[a-z][a-z0-9-]*$"
         },
-        "name": {
-          "description": "Vollständiger Name des Waldes (mit Umlauten/Sonderzeichen, menschenlesbar).",
-          "type": "string",
-          "minLength": 2
-        },
-        "region": {
-          "description": "Region innerhalb des Landes.",
-          "type": "string"
-        },
+        "name": { "type": "string", "minLength": 2 },
+        "region": { "type": "string" },
         "country": {
-          "description": "Land im ISO-3166-1-alpha-2-Format.",
           "type": "string",
           "pattern": "^[A-Z]{2}$"
         },
-        "forest_type": {
-          "description": "Wald-Typus (z. B. Mischwald, Nadelwald, Regenwald, Urwald).",
-          "type": "string"
-        },
+        "forest_type": { "type": "string" },
         "age_estimate_years": {
-          "description": "Grobe Altersangabe des Waldes (Jahre).",
           "type": "integer",
           "minimum": 0
         },
         "status": {
-          "description": "Schutz-/Bedrohungsstatus.",
           "type": "string",
           "enum": ["protected", "partially-protected", "endangered", "critically-endangered", "stable", "unknown"]
         },
         "themes": {
-          "description": "Stichworte zur Geschichte/Bedeutung (z. B. 'braunkohle', 'biodiversität', 'klimaschutz').",
           "type": "array",
           "items": { "type": "string" }
         },
         "links": {
-          "description": "Weiterführende Links, z. B. zu Schutzorganisationen oder Wikipedia.",
           "type": "array",
           "items": {
             "type": "object",
@@ -109,22 +94,52 @@
             }
           }
         },
-        "note": {
-          "description": "Optionaler Satz, warum genau dieser Wald für genau dieses Möbel.",
-          "type": "string"
+        "note": { "type": "string" }
+      }
+    },
+    "assemblies": {
+      "description": "Baugruppen des Möbels. Mindestens die Hauptbaugruppe A001 (= das Möbel selbst) ist Pflicht. Sub-Baugruppen referenzieren ihre Eltern-Baugruppe über 'parent'.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["heimeliq-assembly-id", "name"],
+        "properties": {
+          "heimeliq-assembly-id": {
+            "description": "Möbel-lokale Assembly-ID, z. B. 'A001' (Hauptbaugruppe), 'A002', ...",
+            "type": "string",
+            "pattern": "^A[0-9]{3}$"
+          },
+          "name": { "type": "string", "minLength": 2 },
+          "description": { "type": "string" },
+          "source": {
+            "description": "Pfad zur FreeCAD-Quelldatei der Baugruppe, z. B. 'cad/source/A001-Sideboard.FCStd'.",
+            "type": "string"
+          },
+          "parent": {
+            "description": "Eltern-Baugruppe (nur bei Sub-Baugruppen). Muss eine existierende heimeliq-assembly-id sein.",
+            "type": "string",
+            "pattern": "^A[0-9]{3}$"
+          },
+          "optional": {
+            "description": "Ist diese Baugruppe optional (Erweiterung)? Default: false (= Teil des Grundmodells).",
+            "type": "boolean",
+            "default": false
+          }
         }
       }
     },
     "external_parts": {
-      "description": "Externe Drittteile (nicht open source).",
+      "description": "Externe Drittteile (nicht open source). Jede ID muss mit einem Assembly-Präfix beginnen (z. B. A001.E001).",
       "type": "array",
       "items": {
         "type": "object",
         "required": ["heimeliq-part-id", "name", "quantity"],
         "properties": {
           "heimeliq-part-id": {
+            "description": "Assembly-präfixierte ID, z. B. 'A001.E001' oder 'A002.E001'. Tieferes Nesting möglich: 'A002.A003.E001'.",
             "type": "string",
-            "pattern": "^E[0-9]{3}$"
+            "pattern": "^(A[0-9]{3}\\.)+E[0-9]{3}$"
           },
           "name": { "type": "string" },
           "standard": { "type": "string" },

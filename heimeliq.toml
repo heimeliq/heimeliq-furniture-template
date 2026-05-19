@@ -1,7 +1,7 @@
 # heimeliQ-Erweiterungen
 # Diese Datei ergänzt das OKH-Manifest um heimeliQ-spezifische Felder, die
 # der allgemeine OKH-Standard nicht abbildet (Reihen-Zugehörigkeit, Wald-
-# Namensgeber, externe Drittteile, Versionsbezüge etc.).
+# Namensgeber, Baugruppen, externe Drittteile, Versionsbezüge etc.).
 #
 # Gegen heimeliq.schema.json validierbar.
 #
@@ -16,7 +16,7 @@
 
 # Version dieser Vorlage, auf der das Möbel-Repo basiert.
 # Wird bei jedem Template-Upgrade aktualisiert (siehe MIGRATIONS.md).
-heimeliq-template-version = "0.2.0"
+heimeliq-template-version = "0.3.0"
 
 # Version dieses Möbels (SemVer).
 # Erhöhen bei: PATCH = Doku-Fixes, MINOR = neue Optionen, MAJOR = Konstruktionsänderung.
@@ -63,24 +63,63 @@ note = """
 FIXME: Optionaler Satz, warum genau dieser Wald für genau dieses Möbel?
 """
 
-# Weiterführende Links zu Schutzorganisationen, Wikipedia etc.
 [[forest.links]]
 label = "FIXME Link-Beschriftung"
 url = "https://FIXME.example.org"
+
+# ============================================================================
+# BAUGRUPPEN
+# ============================================================================
+# A001 ist konventionell die Hauptbaugruppe = das ganze Möbel.
+# Sub-Baugruppen (Schubladen, Türen, Erweiterungen) bekommen A002, A003, ...
+# und referenzieren ihre Eltern-Baugruppe über `parent`.
+# `optional = true` markiert eine Baugruppe als Erweiterung (= später im Shop
+# als optionale Variante mit Aufpreis konfigurierbar).
+#
+# Jede Baugruppe entspricht einer eigenen FreeCAD-Datei:
+#   cad/source/A001-<Name>.FCStd
+#   cad/source/A002-<Name>.FCStd
+#   ...
+
+# Hauptbaugruppe (= das Möbel selbst). Pflicht.
+[[assemblies]]
+heimeliq-assembly-id = "A001"
+name = "FIXME Möbelname (Hauptbaugruppe)"
+source = "cad/source/A001-FIXME-name.FCStd"
+optional = false
+
+# Beispiel für eine optionale Sub-Baugruppe (z. B. Schublade).
+# Kann gelöscht werden, falls das Möbel nur aus der Hauptbaugruppe besteht.
+[[assemblies]]
+heimeliq-assembly-id = "A002"
+name = "FIXME Sub-Baugruppe (z. B. Schublade)"
+description = "FIXME kurze Beschreibung der Baugruppe"
+source = "cad/source/A002-FIXME-name.FCStd"
+parent = "A001"
+optional = true
 
 # ============================================================================
 # Externe Bauteile (Standard- und Drittteile, nicht open source)
 # ============================================================================
 # Schrauben, Beschläge, Scharniere etc. Diese stehen NICHT im OKH-`part`-Array,
 # weil sie keine eigene Open-Hardware-Doku haben.
-# IDs: E001, E002, ... (möbel-lokal eindeutig)
+# IDs sind immer voll qualifiziert mit Assembly-Präfix:
+#   A001.E001, A001.E002, ...  (externe Teile der Hauptbaugruppe)
+#   A002.E001, A002.E002, ...  (externe Teile der Sub-Baugruppe Schublade)
 
 [[external_parts]]
-heimeliq-part-id = "E001"
+heimeliq-part-id = "A001.E001"
 name = "FIXME Bezeichnung"             # z. B. "Senkkopfschraube"
 standard = "FIXME"                     # z. B. "DIN 7991", "ISO 10642"
 material = "FIXME"                     # z. B. "Edelstahl A2"
 dimensions = "FIXME"                   # z. B. "M6x40"
+quantity = 0
+
+# Beispiel für ein externes Teil in einer Sub-Baugruppe (z. B. Vollauszug
+# in einer Schublade). Bei Bedarf entfernen.
+[[external_parts]]
+heimeliq-part-id = "A002.E001"
+name = "FIXME Bezeichnung in Sub-Baugruppe"
 quantity = 0
 
 # ============================================================================

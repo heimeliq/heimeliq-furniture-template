@@ -15,6 +15,28 @@ Bestehende Repos werden nicht automatisch migriert – Stabilität geht vor.
 
 ---
 
+## 0.2.x → 0.3.0
+
+Diese Version führt das **Baugruppen-Konzept** ein. Bauteil-IDs werden voll qualifiziert mit Assembly-Präfix.
+
+1. **Assemblies in `heimeliq.toml` ergänzen**: Mindestens die Hauptbaugruppe `A001` als `[[assemblies]]`-Eintrag eintragen, mit `source` auf die FreeCAD-Datei und `optional = false`. Falls das Möbel Erweiterungen hat (z. B. eine Schublade), für jede Erweiterung eine eigene Sub-Baugruppe `A002`, `A003`, … mit `parent = "A001"` und `optional = true` ergänzen.
+
+2. **FreeCAD-Dateien umbenennen** nach Schema `A001-<Name>.FCStd`, `A002-<Name>.FCStd`. Optional: pro Baugruppe einen eigenen Unterordner in `cad/exports/` anlegen.
+
+3. **Bauteil-IDs umstellen**:
+   - In `okh.toml`: alle `heimeliq-part-id` von `S001` → `A001.S001` (bzw. `A002.S001` für Bauteile der Schublade etc.).
+   - In `okh.toml`: neues Feld `heimeliq-assembly = "A001"` pro Bauteil ergänzen.
+   - In `okh.toml`: `source` aller Bauteile auf die jeweilige Assembly-Datei zeigen lassen.
+   - In `heimeliq.toml`: alle `external_parts[].heimeliq-part-id` von `E001` → `A001.E001` (bzw. `A002.E001`).
+
+4. **Dokumentation aktualisieren**: `docs/de/bom.md` und ggf. `README.md` mit den neuen IDs befüllen.
+
+5. **`heimeliq-template-version`** auf `"0.3.0"` heben.
+
+6. **Validate-Action prüfen**: Lokal oder via Push prüfen, dass das neue Schema erfüllt ist. Häufige Fehler nach der Migration: fehlende `[[assemblies]]`-Section, oder Bauteil-IDs ohne Präfix.
+
+---
+
 ## 0.1.x → 0.2.0
 
 Diese Version führt das **Wald-Namensgeber-Konzept** ein und verschlankt das ID-Schema. Bestehende Möbel-Repos (typischerweise das v0.1.x-Pilotmöbel) sollten so migriert werden:

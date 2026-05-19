@@ -11,24 +11,20 @@
 # ----------------------------------------------------------------------------
 # WICHTIG zur TOML-Reihenfolge:
 # Alle Top-Level-Felder (skalare Werte und einfache Arrays) MÜSSEN vor dem
-# ersten Section-Header ([...] oder [[...]]) stehen. Wird ein Top-Level-Feld
-# unter einer Section deklariert, wird es TOML-spezifikationsgemäß zu einem
-# Sub-Feld dieser Section - das ist meist nicht gewollt und führt zu stillen
-# Validierungsfehlern.
+# ersten Section-Header ([...] oder [[...]]) stehen.
 # ----------------------------------------------------------------------------
 
 # ============================================================================
-# TOP-LEVEL-FELDER (alle vor der ersten Section!)
+# TOP-LEVEL-FELDER
 # ============================================================================
 
 "$schema" = "https://w3id.org/oseg/schema/okh.schema.json"
 
-# --- OKH-Version ---
 okhv = "2.4"
 
 # --- Identität ---
 name = "FIXME Möbelname"
-repo = "https://github.com/heimeliq/FIXME-heimeliq-<reihe>-<typ>-<nr>"
+repo = "https://github.com/heimeliq/FIXME-heimeliq-<reihe>-<waldname>"
 
 # --- Lizenz ---
 license = "CERN-OHL-S-2.0"
@@ -46,28 +42,21 @@ als Hauptbeschreibung verwendet.
 documentation-language = "de"
 
 # --- Reifegrad der Dokumentation ---
-# ODRL-1: Dokumentationsprozess gestartet
-# ODRL-2: Kollaborative Dokumentation in Arbeit
-# ODRL-3: Vollständige Dokumentation
-# ODRL-3*: Vollständige Dokumentation auditiert
-# ODRL-4: Vollständige Doku für Produktqualifikation
 documentation-readiness-level = "ODRL-2"
 
 # --- Technologie-spezifische Dokumentationskriterien ---
-# MEC: Mechanisch, ASM: Assembly, CNC: CNC-gefertigt, etc.
-# Siehe: https://w3id.org/oseg/ont/tsdc/core
 tsdc = ["MEC", "ASM"]
 
 # --- Masse des Möbels (in Gramm) ---
 mass = 0     # FIXME
 
-# --- Pfade zu Dokumentations-Dateien (relative Pfade im Repo) ---
+# --- Pfade zu Dokumentations-Dateien ---
 manufacturing-instructions = "docs/de/build-guide.md"
 bom = "docs/de/bom.md"
 readme = "README.md"
 
 # ============================================================================
-# SECTIONS (alle Top-Level-Felder müssen oben stehen!)
+# SECTIONS
 # ============================================================================
 
 # --- Äußere Abmessungen des Möbels (in mm) ---
@@ -82,8 +71,6 @@ name = "heimeliq"
 url = "https://heimeliq.de"
 
 # --- Hauptbilder (für Außenwirkung) ---
-# Hier können beliebig viele [[image]]-Einträge stehen. Für jedes weitere
-# Bild einen neuen [[image]]-Block ergänzen.
 [[image]]
 location = "media/hero.jpg"
 slots = ["photo-thing-main", "model-main"]
@@ -91,25 +78,36 @@ tags = ["photo"]
 depicts = "FIXME: kurze Beschreibung des Hauptbildes"
 
 # ============================================================================
-# Bauteile (eigene, open-source Komponenten)
+# EIGENE BAUTEILE (open-source, in OKH-`part`-Array)
 # ============================================================================
-# Jedes Bauteil bekommt eine möbel-lokale ID: S001, S002, ...
+# Jedes Bauteil bekommt eine möbel-lokale, voll-qualifizierte ID:
+#   A001.S001, A001.S002, ...  (Bauteile der Hauptbaugruppe)
+#   A002.S001, A002.S002, ...  (Bauteile einer Sub-Baugruppe)
+#
+# `source` zeigt auf die FreeCAD-Datei der zugehörigen Baugruppe,
+# in der das Bauteil definiert ist.
+#
 # Externe Drittteile (Schrauben, Beschläge) stehen NICHT hier, sondern in
 # heimeliq.toml unter [[external_parts]].
-#
-# Wichtig: outer-dimensions als Inline-Table im [[part]]-Eintrag verwenden,
-# nicht als Sub-Section [part.outer-dimensions] - letzteres wird bei mehreren
-# Bauteilen mehrdeutig.
 
 [[part]]
 name = "FIXME Bauteilname (z. B. Korpus-Seitenwand links)"
-source = "cad/source/FIXME-bauteil-01.FCStd"
-export = ["cad/exports/FIXME-bauteil-01.step", "cad/exports/FIXME-bauteil-01.stl"]
-mass = 0                    # FIXME, in Gramm
-heimeliq-part-id = "S001"
+source = "cad/source/A001-FIXME-name.FCStd"
+export = ["cad/exports/A001/FIXME-bauteil-01.step", "cad/exports/A001/FIXME-bauteil-01.stl"]
+mass = 0
+heimeliq-part-id = "A001.S001"
+heimeliq-assembly = "A001"
 tsdc = ["MEC"]
-outer-dimensions = { width = 0, depth = 0, height = 0 }  # FIXME, in mm
+outer-dimensions = { width = 0, depth = 0, height = 0 }
 
-# Weitere Bauteile als zusätzliche [[part]]-Blöcke ergänzen.
-# Die heimeliq-part-id läuft pro Möbel-Repo bei S001 los und ist
-# möbel-lokal eindeutig.
+# Beispiel für ein Bauteil in einer Sub-Baugruppe (z. B. Schublade).
+# Bei Bedarf entfernen.
+[[part]]
+name = "FIXME Bauteilname in Sub-Baugruppe (z. B. Schubladen-Boden)"
+source = "cad/source/A002-FIXME-name.FCStd"
+export = ["cad/exports/A002/FIXME-bauteil-01.step"]
+mass = 0
+heimeliq-part-id = "A002.S001"
+heimeliq-assembly = "A002"
+tsdc = ["MEC"]
+outer-dimensions = { width = 0, depth = 0, height = 0 }

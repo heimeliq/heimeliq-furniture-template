@@ -8,7 +8,7 @@ Jedes Möbel von heimeliQ lebt in einem eigenen Git-Repository. Diese Vorlage de
 
 | Komponente | Version |
 | --- | --- |
-| heimeliQ Template | `0.2.0` |
+| heimeliQ Template | `0.3.0` |
 | OKH-Manifest | `2.4` |
 | Lizenz dieses Templates | `MIT` |
 | Lizenz daraus erzeugter Möbel-Repos | `CERN-OHL-S-2.0` |
@@ -117,11 +117,13 @@ Faustregel: **Außenwirkungs-Bilder zentral in `media/`, Doku-Bilder lokal neben
 | Ebene | Schema | Beispiel |
 | --- | --- | --- |
 | Möbel-Repo | `heimeliq-<reihe>-<waldname>` | `heimeliq-massiq-hambach` |
-| Eigenes Bauteil (Self) | `S###` | `S001` (möbel-lokal) |
-| Externes Bauteil | `E###` | `E001` (möbel-lokal) |
+| Hauptbaugruppe | `A001` | `A001` |
+| Sub-Baugruppe | `A002`, `A003`, … | `A002` (z. B. Schublade) |
+| Eigenes Bauteil (Self) | `<Baugruppe>.S###` | `A001.S001`, `A002.S001` |
+| Externes Bauteil | `<Baugruppe>.E###` | `A001.E001`, `A002.E001` |
 | Möbel-Version | SemVer | `1.2.0` |
 
-Bauteil-IDs sind innerhalb des jeweiligen Möbel-Repos eindeutig. Außerhalb adressiert man sie als `<repo>/<part-id>`.
+Bauteil-IDs sind innerhalb des jeweiligen Möbel-Repos eindeutig und immer voll qualifiziert mit Assembly-Präfix. Außerhalb adressiert man sie als `<repo>/<part-id>`.
 
 Der Möbel-Typ (z. B. `sideboard`, `werkbank`) ist **kein** Teil der ID, sondern ein Metadatenfeld (`type`) in `heimeliq.toml`. Gleiches gilt für zusätzliche `tags`. Damit bleibt die ID schlank und die Klassifizierung filterbar.
 
@@ -137,6 +139,27 @@ Beispiele für Waldnamen:
 - Welt: `tongass`, `daintree`, `yakushima`, `atewa`
 
 Die `id` im `[forest]`-Block muss URL-tauglich sein (lowercase, keine Umlaute) und mit dem letzten Segment des Repo-Namens übereinstimmen.
+
+## Baugruppen-Konzept
+
+Jedes heimeliQ-Möbel ist als Hierarchie von Baugruppen modelliert:
+
+- **`A001`** ist konventionell die **Hauptbaugruppe** = das ganze Möbel.
+- Sub-Baugruppen (Schubladen, Türen, Erweiterungen) bekommen `A002`, `A003`, … und referenzieren ihre Eltern-Baugruppe über das Feld `parent`.
+- Jedes Bauteil gehört zu genau einer Baugruppe und trägt deren Präfix in der ID (`A001.S001`, `A002.E001` usw.).
+- `optional = true` markiert eine Baugruppe als Erweiterung. Solche Baugruppen werden später im Shop zu konfigurierbaren Varianten mit Aufpreis.
+
+**Konvention für FreeCAD-Dateien**: Jede Baugruppe ist eine eigene `.FCStd`-Datei, benannt nach Schema `A001-<Name>.FCStd`, `A002-<Name>.FCStd`. Beispiel:
+
+```
+cad/source/
+├── A001-Sideboard.FCStd
+└── A002-Schublade.FCStd
+```
+
+Im OKH-`[[part]]`-Array zeigt das `source`-Feld jedes Bauteils auf die Assembly-Datei, in der das Bauteil definiert ist. Zusätzlich verlinkt das Feld `heimeliq-assembly` die Baugruppe explizit.
+
+In der Praxis sind zwei Hierarchie-Ebenen (Möbel + direkte Erweiterungen) der Normalfall. Tieferes Nesting (z. B. `A002.A003.S001`) ist technisch erlaubt, aber selten nötig.
 
 ## Mitwirken
 

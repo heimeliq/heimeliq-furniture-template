@@ -6,6 +6,21 @@ Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 - **MINOR** (`0.x.0`): Neues optionales Feld oder Ordner. Bestehende Repos funktionieren weiter.
 - **PATCH** (`0.0.x`): Tippfehler, Klarstellungen, Bug-Fixes, kein strukturelles Update.
 
+## [0.3.0] – Baugruppen-Hierarchie und qualifizierte Bauteil-IDs
+
+heimeliQ-Möbel sind jetzt als Hierarchie von Baugruppen modelliert. `A001` ist konventionell die Hauptbaugruppe (= das Möbel), Sub-Baugruppen wie Schubladen oder Türen bekommen `A002`, `A003`, … Bauteil-IDs sind voll qualifiziert mit Assembly-Präfix (`A001.S001`, `A002.E001` usw.). Damit lassen sich optionale Erweiterungen sauber abbilden, und der spätere Shop kann sie als konfigurierbare Varianten mit Aufpreis anbieten.
+
+**Neu:**
+
+- Pflicht-Section `[[assemblies]]` in `heimeliq.toml` mit mindestens der Hauptbaugruppe `A001`. Felder: `heimeliq-assembly-id`, `name`, optional `description`, `source`, `parent`, `optional`.
+- Bauteil-IDs sind jetzt voll qualifiziert: `<Baugruppe>.S###` für eigene Teile, `<Baugruppe>.E###` für externe Teile. Tieferes Nesting (z. B. `A002.A003.S001`) ist technisch erlaubt.
+- OKH-`[[part]]`-Einträge bekommen ein neues Feld `heimeliq-assembly`, das die Baugruppe explizit verlinkt.
+- Konvention für FreeCAD-Dateien: eine `.FCStd` pro Baugruppe, benannt nach `A###-<Name>.FCStd`.
+- `heimeliq.schema.json` validiert die Assembly-Struktur und die präfixierten IDs.
+- README erklärt das Baugruppen-Konzept; Migrations-Anleitung in `MIGRATIONS.md`.
+
+**Migration:** siehe `MIGRATIONS.md` für die Schritte 0.2.x → 0.3.0.
+
 ## [0.2.0] – Wald-Namensgeber, schlankeres ID-Schema
 
 Jedes heimeliQ-Möbel trägt den Namen eines real existierenden Waldes. Der Waldname ist möbel-eindeutig: kein zweites Möbel trägt denselben Wald. Damit wird die Marke um eine inhaltliche Schicht erweitert – jedes Möbel verweist auf einen Ort und macht bei bedrohten Wäldern deren Situation sichtbar. Da der Waldname allein eindeutig ist, entfällt das `<typ>`-Segment in der ID.
