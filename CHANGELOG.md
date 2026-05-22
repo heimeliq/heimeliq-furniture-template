@@ -6,6 +6,16 @@ Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 - **MINOR** (`0.x.0`): Neues optionales Feld oder Ordner. Bestehende Repos funktionieren weiter.
 - **PATCH** (`0.0.x`): Tippfehler, Klarstellungen, Bug-Fixes, kein strukturelles Update.
 
+## [0.4.0] – Instruction-Version
+
+Jedes heimeliQ-Möbel trägt jetzt eine Referenz auf den Instructions-Stand, mit dem es produziert wurde. Das Feld `heimeliq-instruction-version` wird in Phase 2 automatisch vom Bot gesetzt und bleibt im Template leer.
+
+**Neu:**
+
+- Pflichtfeld `heimeliq-instruction-version` in `heimeliq.schema.json` und als leerer Platzhalter in `heimeliq.toml`.
+
+**Migration:** siehe `MIGRATIONS.md` für die Schritte 0.3.x → 0.4.0.
+
 ## [0.3.0] – Baugruppen-Hierarchie und qualifizierte Bauteil-IDs
 
 heimeliQ-Möbel sind jetzt als Hierarchie von Baugruppen modelliert. `A001` ist konventionell die Hauptbaugruppe (= das Möbel), Sub-Baugruppen wie Schubladen oder Türen bekommen `A002`, `A003`, … Bauteil-IDs sind voll qualifiziert mit Assembly-Präfix (`A001.S001`, `A002.E001` usw.). Damit lassen sich optionale Erweiterungen sauber abbilden, und der spätere Shop kann sie als konfigurierbare Varianten mit Aufpreis anbieten.

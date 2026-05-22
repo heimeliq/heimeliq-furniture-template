@@ -22,6 +22,10 @@ heimeliq-template-version = "0.3.0"
 # Erhöhen bei: PATCH = Doku-Fixes, MINOR = neue Optionen, MAJOR = Konstruktionsänderung.
 version = "0.1.0"
 
+# Verweis auf den instructions-Stand, mit dem dieses Möbel
+# produziert wurde. Wird in Phase 2 vom Bot gesetzt.
+heimeliq-instruction-version = ""
+
 # Slug für URLs auf der Website. Identisch mit dem Repo-Namen ohne "heimeliq-"
 # Präfix. Schema: <reihe>-<waldname>.
 slug = "FIXME-reihe-waldname"          # z. B. "massiq-hambach"

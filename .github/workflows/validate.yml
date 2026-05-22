@@ -106,6 +106,21 @@ jobs:
             echo "status=$STATUS (nicht 'published'), FIXME-Check uebersprungen."
           fi
 
+      - name: Check heimeliq-instruction-version is set (only if published)
+        if: steps.kind.outputs.kind == 'furniture'
+        run: |
+          STATUS=$(python -c "import tomli; d=tomli.load(open('heimeliq.toml','rb')); print(d.get('status',''))")
+          if [ "$STATUS" = "published" ]; then
+            IV=$(python -c "import tomli; d=tomli.load(open('heimeliq.toml','rb')); print(d.get('heimeliq-instruction-version',''))")
+            if [ -z "$IV" ]; then
+              echo "status=published, aber heimeliq-instruction-version ist leer. Wird in Phase 2 vom Bot gesetzt."
+              exit 1
+            fi
+            echo "heimeliq-instruction-version=$IV – OK."
+          else
+            echo "status=$STATUS (nicht 'published'), heimeliq-instruction-version-Check uebersprungen."
+          fi
+
       - name: Check required media files (only if published)
         if: steps.kind.outputs.kind == 'furniture'
         run: |

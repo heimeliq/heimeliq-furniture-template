@@ -15,6 +15,24 @@ Bestehende Repos werden nicht automatisch migriert – Stabilität geht vor.
 
 ---
 
+## 0.3.x → 0.4.0
+
+Diese Version führt das Pflichtfeld **`heimeliq-instruction-version`** ein.
+
+1. **`heimeliq.toml` ergänzen**: Direkt nach `heimeliq-template-version` das Feld eintragen:
+
+   ```toml
+   heimeliq-instruction-version = ""
+   ```
+
+   Der Wert bleibt leer – er wird in Phase 2 vom Bot gesetzt.
+
+2. **`heimeliq-template-version`** auf `"0.4.0"` heben.
+
+3. **Validate-Action prüfen**: Das Feld muss vorhanden sein; ein leerer String reicht für den Schema-Check.
+
+---
+
 ## 0.2.x → 0.3.0
 
 Diese Version führt das **Baugruppen-Konzept** ein. Bauteil-IDs werden voll qualifiziert mit Assembly-Präfix.
