@@ -85,10 +85,10 @@ depicts = "FIXME: kurze Beschreibung des Hauptbildes"
 # EIGENE BAUTEILE (open-source, in OKH-`part`-Array)
 # ============================================================================
 # Jedes Bauteil bekommt eine Produkt-lokale, voll-qualifizierte ID:
-#   A001.S001, A001.S002, ...  (Bauteile der Hauptbaugruppe)
-#   A002.S001, A002.S002, ...  (Bauteile einer Sub-Baugruppe)
+#   P001.S001, P001.S002, ...  (Bauteile des Haupt-Parts)
+#   P002.S001, P002.S002, ...  (Bauteile eines weiteren Parts)
 #
-# `source` zeigt auf die FreeCAD-Datei der zugehörigen Baugruppe,
+# `source` zeigt auf die FreeCAD-Datei des zugehörigen Parts,
 # in der das Bauteil definiert ist.
 #
 # Externe Drittteile (Schrauben, Beschläge) stehen NICHT hier, sondern in
@@ -106,23 +106,23 @@ depicts = "FIXME: kurze Beschreibung des Hauptbildes"
 
 [[part]]
 name = "FIXME Bauteilname (z. B. Korpus-Seitenwand links)"
-source = "cad/source/A001-FIXME-name.FCStd"
-export = ["cad/exports/A001/FIXME-bauteil-01.step", "cad/exports/A001/FIXME-bauteil-01.stl"]
+source = "cad/source/P001-FIXME-slug-FIXME-kurzname.FCStd"
+export = ["cad/exports/P001-FIXME-slug-FIXME-kurzname.step", "cad/exports/P001-FIXME-slug-FIXME-kurzname.stl"]
 mass = 0
 quantity = 1
-heimeliq-part-id = "A001.S001"
-heimeliq-assembly = "A001"
+heimeliq-part-id = "P001.S001"
+heimeliq-parent-part = "P001"
 tsdc = ["MEC"]
 outer-dimensions = { width = 0, depth = 0, height = 0 }
 
-# Beispiel für ein Bauteil in einer Sub-Baugruppe (z. B. Schublade).
+# Beispiel für ein Bauteil in einem weiteren Part (z. B. Schublade).
 # Bei Bedarf entfernen.
 [[part]]
-name = "FIXME Bauteilname in Sub-Baugruppe (z. B. Schubladen-Boden)"
-source = "cad/source/A002-FIXME-name.FCStd"
-export = ["cad/exports/A002/FIXME-bauteil-01.step"]
+name = "FIXME Bauteilname im Part P002 (z. B. Schubladen-Boden)"
+source = "cad/source/P002-FIXME-slug-FIXME-kurzname.FCStd"
+export = ["cad/exports/P002-FIXME-slug-FIXME-kurzname.step"]
 mass = 0
-heimeliq-part-id = "A002.S001"
-heimeliq-assembly = "A002"
+heimeliq-part-id = "P002.S001"
+heimeliq-parent-part = "P002"
 tsdc = ["MEC"]
 outer-dimensions = { width = 0, depth = 0, height = 0 }

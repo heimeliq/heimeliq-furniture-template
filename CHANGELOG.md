@@ -2,9 +2,54 @@
 
 Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 
-- **MAJOR** (`x.0.0`): Breaking Change. Bestehende Produkt-Repos brauchen Migration.
-- **MINOR** (`0.x.0`): Neues optionales Feld oder Ordner. Bestehende Repos funktionieren weiter.
+- **MAJOR** (`x.0.0`): Breaking Change — **erst ab 1.0.0**. Solange die Vorlage in
+  `0.x` steht, gehören brechende Änderungen nach SemVer in den MINOR; eine 1.0.0
+  würde behaupten, die Vorlage sei fertig.
+- **MINOR** (`0.x.0`): Neues Feld, neuer Ordner — und in `0.x` auch brechende
+  Änderungen. Was bestehende Repos tun müssen, steht dann in `MIGRATIONS.md`.
 - **PATCH** (`0.0.x`): Tippfehler, Klarstellungen, Bug-Fixes, kein strukturelles Update.
+
+## [0.10.0] – 2026-09-26 – A becomes P, and A becomes the linked assembly
+
+Breaking, and in `0.x` that is a MINOR. Existing repos keep working until they are
+migrated; `MIGRATIONS.md` says what to do.
+
+`A001` meant "Baugruppe" and named what is firmly joined and handled as one piece:
+corpus, lid, drawer. That spent the letter on something that is really a part, and
+left none for the real assembly.
+
+**Changed:**
+
+- `P00n` is what `A00n` was — same meaning, same files, same sheets. The criterion
+  is unchanged: what moves as a unit against the others, or is mounted separately.
+- `A001` is one file per product repo that links the P's, with **no** TechDraw
+  sheet. The human creates and exports it. It is not declared in `heimeliq.toml`
+  at all: `[[parts]]` lists the P's, and an A file is recognised by its name. So
+  the machine-readable data stays on the one product, and `A002`+ — the human's
+  workbench for letting a future product ripen in the repo — are invisible by
+  themselves.
+- `heimeliq.toml`: `[[assemblies]]` becomes `[[parts]]`,
+  `heimeliq-assembly-id` becomes `heimeliq-part-id` with pattern `^P[0-9]{3}$`,
+  and a **new required field `kurzname`** (`^[a-z0-9-]+$`) carries the file-name
+  segment.
+- IDs: `P001.S001`, `P001.E001`. `A001.E001` is reserved for what exists only
+  because two P's are joined. The old nesting form `A002.A003.E001` is gone —
+  nobody used it.
+- `okh.toml`: `heimeliq-assembly` becomes `heimeliq-parent-part`, with a P value.
+  Nothing read that field, so the rename is free.
+- **New file names**, one pattern for everything belonging to a P:
+  `cad/source/P001-<slug>-<kurzname>.FCStd` and
+  `cad/exports/P001-<slug>-<kurzname>.step` / `.stl` / `-overview.svg`. The
+  reversed order of the overview SVG (`<slug>-A001-overview.svg`) is gone.
+
+The Kurzname is a field of its own rather than derived from `name`, because the
+prose names are unusable as file names: the parenthesis convention ("gehriq Box
+mit Klappdeckel (Korpus)") yields `korpus` for the box but `hauptbaugruppe` for
+the tray and `schubladenboard-schubladenboard-korpus` for the drawer board. A
+file name must not change when someone rewords a description.
+
+The helpers still speak of A — that is the next step, together with the export for
+A files. The products are untouched.
 
 ## [0.9.3] – 2026-09-24 – A place for the mass, so the manifest can lose its prose
 

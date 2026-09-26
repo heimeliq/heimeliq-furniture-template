@@ -1,7 +1,7 @@
 # heimeliq-Erweiterungen
 # Diese Datei ergänzt das OKH-Manifest um heimeliq-spezifische Felder, die
 # der allgemeine OKH-Standard nicht abbildet (Typ, Thema, Serien-Zugehörigkeit,
-# Baugruppen, externe Drittteile, Varianten, Versionsbezüge etc.).
+# Parts, externe Drittteile, Varianten, Versionsbezüge etc.).
 #
 # Gegen heimeliq.schema.json validierbar.
 #
@@ -16,7 +16,7 @@
 
 # Version dieser Vorlage, auf der das Produkt-Repo basiert.
 # Wird bei jedem Template-Upgrade aktualisiert (siehe MIGRATIONS.md).
-heimeliq-template-version = "0.9.3"
+heimeliq-template-version = "0.10.0"
 
 # Version dieses Produkts (SemVer).
 # Erhöhen bei: PATCH = Doku-Fixes, MINOR = neue Optionen, MAJOR = Konstruktionsänderung.
@@ -114,7 +114,7 @@ status = []                            # "draft" | "published" | "archived"
 # die Zahl der Fachböden zwischen Varianten, ohne die Sperre zu verletzen.
 #
 # `parts` listet die Bauteile, die diese Variante enthält – voll qualifizierte
-# IDs aus okh.toml [[part]] und [[external_parts]] weiter unten. Eine Baugruppe
+# IDs aus okh.toml [[part]] und [[external_parts]] weiter unten. Ein Part
 # gilt als enthalten, sobald eines ihrer Bauteile gelistet ist.
 #
 # Ein Produkt ohne Größenauswahl hat genau eine Option, die zugleich
@@ -128,56 +128,67 @@ reference = "FIXME"                    # id einer der folgenden Optionen
 id = "FIXME"                           # frei gewählt, lowercase, ohne Umlaute; z. B. "klein", "1200x800", "3x4x3"
 label = "FIXME"                        # Anzeigeform, z. B. "40 × 30 cm"
 parameter = { }                        # Alias-Name = Zahl, z. B. { length = 400, width = 300, FaecherMitte = 3 }
-parts = ["A001.S001"]                  # FIXME: alle Bauteil-IDs dieser Variante
+parts = ["P001.S001"]                  # FIXME: alle Bauteil-IDs dieser Variante
 
 # Weitere Optionen bei Bedarf ergänzen. Bei einem Produkt ohne Größenauswahl
 # bleibt es bei dieser einen Option, und `reference` zeigt auf ihre `id`.
 
 # ============================================================================
-# BAUGRUPPEN
+# PARTS
 # ============================================================================
-# Eine Baugruppe ist, was sich als Einheit gegenüber den anderen bewegt oder
-# getrennt montiert wird — Korpus, Tür, Schublade, Deckel. Nicht "was verleimt
-# ist": Ein Klappdeckel ist ein einzelnes Brett und trotzdem eine eigene
-# Baugruppe; ein fest verschraubter Innenboden ist keine, sondern ein Bauteil
-# des Korpus. A001 ist die erste davon, NICHT "das Produkt":
-# bei einer Box mit Klappdeckel ist A001 der Korpus, A002 der Deckel, und das
-# Produkt ist beides. Das Produkt selbst hat keine A-Nummer, es ist das Repo.
-# Sub-Baugruppen referenzieren ihre Eltern-Baugruppe über `parent`.
+# Ein Part ist, was sich als Einheit gegenüber den anderen bewegt oder getrennt
+# montiert wird — Korpus, Tür, Schublade, Deckel. Nicht "was verleimt ist": Ein
+# Klappdeckel ist ein einzelnes Brett und trotzdem ein eigenes Part; ein fest
+# verschraubter Innenboden ist keines, sondern ein Bauteil des Korpus. Nach
+# innen ist ein Part fest gefügt und in FreeCAD ein Assembly aus S-Teilen.
 #
-# Eine Variante ist NIE eine Baugruppe. Andere Maße bei gleicher Konstruktion
-# stehen unter [variants], nicht hier.
-# `optional = true` markiert eine Baugruppe als Erweiterung (= später im Shop
-# als optionale Variante mit Aufpreis konfigurierbar).
+# P001 ist das erste, NICHT "das Produkt": bei einer Box mit Klappdeckel ist
+# P001 der Korpus, P002 der Deckel, und das Produkt ist beides.
+#
+# Wie die Parts zusammengehören, sagt die Baugruppen-Datei A001. Sie wird hier
+# NICHT deklariert — sie legt der Mensch an, sie hat kein TechDraw-Blatt, und
+# A002 und höher sind seine Werkbank und bleiben aus der Dokumentation heraus
+# (instructions/reference/produkt-modell.md).
+#
+# Eine Variante ist NIE ein Part. Andere Maße bei gleicher Konstruktion stehen
+# unter [variants], nicht hier.
+# `optional = true` markiert ein Part als Erweiterung (= später im Shop als
+# optionale Variante mit Aufpreis konfigurierbar).
+#
+# `kurzname` ist der Dateinamens-Teil: klein, ASCII, ohne Leerzeichen. Quelle
+# ist die Parts-Tabelle der INSTRUCTIONS.md. Die Prosa steht in `name`, damit
+# eine Umformulierung keine Dateien umbenennt.
 #
 # `bauform` ist optional und benennt eine geteilte parametrische Quelle.
-# Baugruppen mit derselben `bauform` sind dasselbe Ding in anderen Größen
+# Parts mit derselben `bauform` sind dasselbe Ding in anderen Größen
 # INNERHALB EINES PRODUKTS – enthält ein Sideboard drei verschieden breite
-# Schubladen, sind das A002, A003, A004 mit
+# Schubladen, sind das P002, P003, P004 mit
 # `bauform = "schublade"`. Die IDs bleiben damit flach und stabil, und die
 # Bauanleitung beschreibt die Schublade einmal.
 #
-# Jede Baugruppe entspricht einer eigenen FreeCAD-Datei:
-#   cad/source/A001-<Name>.FCStd
-#   cad/source/A002-<Name>.FCStd
+# Jedes Part entspricht einer eigenen FreeCAD-Datei:
+#   cad/source/P001-<slug>-<kurzname>.FCStd
+#   cad/source/P002-<slug>-<kurzname>.FCStd
 #   ...
 
-# Hauptbaugruppe (= das Produkt selbst). Pflicht.
-[[assemblies]]
-heimeliq-assembly-id = "A001"
-name = "FIXME Produktname (Hauptbaugruppe)"
-source = "cad/source/A001-FIXME-name.FCStd"
+# Haupt-Part. Pflicht.
+[[parts]]
+heimeliq-part-id = "P001"
+kurzname = "FIXME"                     # z. B. "korpus" — wird Teil des Dateinamens
+name = "FIXME Bezeichnung (z. B. Korpus)"
+source = "cad/source/P001-FIXME-slug-FIXME-kurzname.FCStd"
 optional = false
 
-# Beispiel für eine optionale Sub-Baugruppe (z. B. Schublade).
-# Kann gelöscht werden, falls das Produkt nur aus der Hauptbaugruppe besteht.
-[[assemblies]]
-heimeliq-assembly-id = "A002"
-name = "FIXME Sub-Baugruppe (z. B. Schublade)"
-description = "FIXME kurze Beschreibung der Baugruppe"
+# Beispiel für ein optionales weiteres Part (z. B. Schublade).
+# Kann gelöscht werden, falls das Produkt nur aus dem Haupt-Part besteht.
+[[parts]]
+heimeliq-part-id = "P002"
+kurzname = "FIXME"                     # z. B. "schublade"
+name = "FIXME Bezeichnung (z. B. Schublade)"
+description = "FIXME kurze Beschreibung des Parts"
 bauform = "FIXME"                      # optional, z. B. "schublade"; bei mehreren Größen derselben Bauform überall derselbe Wert
-source = "cad/source/A002-FIXME-name.FCStd"
-parent = "A001"
+source = "cad/source/P002-FIXME-slug-FIXME-kurzname.FCStd"
+parent = "P001"
 optional = true
 
 # ============================================================================
@@ -185,23 +196,25 @@ optional = true
 # ============================================================================
 # Schrauben, Beschläge, Scharniere etc. Diese stehen NICHT im OKH-`part`-Array,
 # weil sie keine eigene Open-Hardware-Doku haben.
-# IDs sind immer voll qualifiziert mit Assembly-Präfix:
-#   A001.E001, A001.E002, ...  (externe Teile der Hauptbaugruppe)
-#   A002.E001, A002.E002, ...  (externe Teile der Sub-Baugruppe Schublade)
+# IDs sind immer voll qualifiziert mit dem Präfix ihres Parts:
+#   P001.E001, P001.E002, ...  (externe Teile des Haupt-Parts)
+#   P002.E001, P002.E002, ...  (externe Teile des Parts Schublade)
+# A001.E001 ist für Teile reserviert, die es nur wegen der Zusammenstellung
+# gibt — die Schrauben, mit denen zwei Parts aneinander kommen.
 
 [[external_parts]]
-heimeliq-part-id = "A001.E001"
+heimeliq-part-id = "P001.E001"
 name = "FIXME Bezeichnung"             # z. B. "Senkkopfschraube"
 standard = "FIXME"                     # z. B. "DIN 7991", "ISO 10642"
 material = "FIXME"                     # z. B. "Edelstahl A2"
 dimensions = "FIXME"                   # z. B. "M6x40"
 quantity = 0
 
-# Beispiel für ein externes Teil in einer Sub-Baugruppe (z. B. Vollauszug
+# Beispiel für ein externes Teil in einem weiteren Part (z. B. Vollauszug
 # in einer Schublade). Bei Bedarf entfernen.
 [[external_parts]]
-heimeliq-part-id = "A002.E001"
-name = "FIXME Bezeichnung in Sub-Baugruppe"
+heimeliq-part-id = "P002.E001"
+name = "FIXME Bezeichnung im Part P002"
 quantity = 0
 
 # ============================================================================
