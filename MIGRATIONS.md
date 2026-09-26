@@ -1,6 +1,6 @@
 # Migrationsanleitungen
 
-Wenn diese Vorlage auf eine neue **Major-Version** gehoben wird (z. B. `0.x.x` → `1.0.0`), beschreibt dieser Abschnitt, was bestehende Produkt-Repos tun müssen, um auf die neue Vorlagen-Version umzustellen.
+Wenn diese Vorlage eine **brechende Änderung** bekommt — in `0.x` ist das ein MINOR, ab 1.0.0 ein MAJOR —, beschreibt dieser Abschnitt, was bestehende Produkt-Repos tun müssen, um auf die neue Vorlagen-Version umzustellen.
 
 Bestehende Repos werden nicht automatisch migriert – Stabilität geht vor.
 
@@ -12,6 +12,55 @@ Bestehende Repos werden nicht automatisch migriert – Stabilität geht vor.
 4. Im Produkt-Repo `heimeliq.toml` → `heimeliq-template-version` auf neue Version setzen.
 5. Eintrag in `changelog.md` (klein, im Produkt-Repo) ergänzen.
 6. Branch mergen, neuen SemVer-Tag setzen.
+
+---
+
+## 0.9.3 → 0.10.0
+
+**Brechend.** `A00n` heißt jetzt `P00n`, und `A` bezeichnet die Baugruppe: eine
+Datei, die Parts verlinkt. Das Modell steht in
+`instructions/reference/produkt-modell.md`.
+
+### Warum
+
+`A001` meinte „Baugruppe" und benannte das, was fest gefügt ist und als ein Stück
+gehandhabt wird — Korpus, Deckel, Schublade. Damit war der Buchstabe für ein Teil
+belegt, und für die wirkliche Baugruppe blieb keiner.
+
+### Was zu tun ist
+
+1. **`heimeliq.toml`**: `[[assemblies]]` → `[[parts]]`,
+   `heimeliq-assembly-id = "A001"` → `heimeliq-part-id = "P001"`, `parent`
+   entsprechend. **Neues Pflichtfeld `kurzname`** je Part: klein, ASCII, ohne
+   Leerzeichen — es wird Teil des Dateinamens. Quelle ist die neue Parts-Tabelle
+   der `INSTRUCTIONS.md`.
+   `[[external_parts]]`: `A001.E001` → `P001.E001`.
+   `[variants.option].parts`: `A001.S001` → `P001.S001`.
+2. **`okh.toml`**: `heimeliq-part-id` → `P001.S001`, `heimeliq-assembly` →
+   `heimeliq-parent-part = "P001"`, `source` und `export` auf die neuen
+   Dateinamen.
+3. **Dateien umbenennen** — ein Muster für alles, was zu einem Part gehört:
+   ```
+   cad/source/P001-<slug>-<kurzname>.FCStd
+   cad/exports/P001-<slug>-<kurzname>.step  /  .stl  /  -overview.svg
+   cad/drawings/P001-<slug>-Skizze-<Ansicht>.svg
+   ```
+   Das Übersichts-SVG hieß vorher `<slug>-A001-overview.svg`; die umgedrehte
+   Reihenfolge entfällt.
+4. **In den FCStds**: Die Labels der Components heißen `P001_S001_Name`, die
+   TechDraw-Objekte `Page_P001`, `ProjGroup_P001`, `Template_P001`, `QR_P001`.
+   Das macht der nächste Lauf der Helfer, sobald diese umgestellt sind.
+5. **`docs/de/bom.md`, `docs/de/parametrisch/bom.tpl.md`, `README.md`**:
+   Bauteil-IDs auf `P…` ziehen.
+6. **`INSTRUCTIONS.md` im instructions-Repo** (auf dem Produkt-Branch): die neue
+   Parts-Tabelle mit ID, Kurzname und Bezeichnung anlegen, IDs in der
+   Bauteiltabelle und im `[faser]`-Block umstellen.
+7. Optional: eine Baugruppen-Datei `A001-<slug>-<kurzname>.FCStd` anlegen, die
+   die Parts verlinkt. Das ist Handarbeit und kein Pflichtteil der Migration.
+8. `heimeliq-template-version = "0.10.0"` setzen.
+
+**Release:** ein **MINOR** im Produkt-Repo, solange es unter `v1.0.0` steht — die
+Konstruktion ändert sich nicht, nur die Namen.
 
 ---
 

@@ -14,7 +14,7 @@
     "theme",
     "series",
     "variants",
-    "assemblies"
+    "parts"
   ],
   "properties": {
     "heimeliq-template-version": {
@@ -109,11 +109,11 @@
                 "additionalProperties": { "type": "number" }
               },
               "parts": {
-                "description": "Bauteile, die diese Variante enthaelt: voll qualifizierte IDs aus okh.toml [[part]] und heimeliq.toml [[external_parts]]. Eine Baugruppe gilt als enthalten, sobald eines ihrer Bauteile gelistet ist. Dieselbe Bauteil-ID bezeichnet ueber alle Varianten hinweg dieselbe Bauform - nur ihre Zahlen unterscheiden sich.",
+                "description": "Bauteile, die diese Variante enthaelt: voll qualifizierte IDs aus okh.toml [[part]] und heimeliq.toml [[external_parts]]. Ein Part gilt als enthalten, sobald eines seiner Bauteile gelistet ist. Dieselbe Bauteil-ID bezeichnet ueber alle Varianten hinweg dieselbe Bauform - nur ihre Zahlen unterscheiden sich.",
                 "type": "array",
                 "minItems": 1,
                 "uniqueItems": true,
-                "items": { "type": "string", "pattern": "^A[0-9]{3}\\.[SE][0-9]{3}$" }
+                "items": { "type": "string", "pattern": "^P[0-9]{3}\\.[SE][0-9]{3}$" }
               },
               "bestueckung": {
                 "description": "Optional. Bestueckung dieser Variante: welche Rasterpositionen einen Boden tragen, welches Fach eine Tuer bekommt, welches eine Schublade. Anders als 'parameter' ist die Form je Produkt frei und unterliegt der Schluesselsatz-Sperre in validate.yml nicht - Masse sind Skalare, Bestueckung ist eine Struktur.",
@@ -127,37 +127,42 @@
     "forest": false,
     "family": false,
     "status": false,
-    "assemblies": {
-      "description": "Baugruppen des Produkts. Mindestens die Hauptbaugruppe A001 (= das Produkt selbst) ist Pflicht. Sub-Baugruppen referenzieren ihre Eltern-Baugruppe über 'parent'.",
+    "parts": {
+      "description": "Parts des Produkts. Ein Part ist, was sich als Einheit bewegt oder getrennt montiert wird, innen fest gefuegt, mit eigener FCStd und eigenem TechDraw-Blatt; mindestens das Haupt-Part P001 ist Pflicht. Wie die Parts zusammengehoeren, sagt die Baugruppen-Datei A001 - sie wird hier nicht deklariert (instructions/reference/produkt-modell.md).",
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["heimeliq-assembly-id", "name"],
+        "required": ["heimeliq-part-id", "kurzname", "name"],
         "properties": {
-          "heimeliq-assembly-id": {
-            "description": "Produkt-lokale Assembly-ID, z. B. 'A001' (Hauptbaugruppe), 'A002', ...",
+          "heimeliq-part-id": {
+            "description": "Produkt-lokale Part-ID, z. B. 'P001' (Haupt-Part), 'P002', ... In Entstehungsreihenfolge vergeben, nie umnummeriert, nie wiederverwendet. Nicht zu verwechseln mit dem gleichnamigen Schluessel unter [[external_parts]] und in okh.toml [[part]]: dort steht die qualifizierte Bauteil-ID 'P001.S001' bzw. 'P001.E001'. Die Form unterscheidet sie.",
             "type": "string",
-            "pattern": "^A[0-9]{3}$"
+            "pattern": "^P[0-9]{3}$"
+          },
+          "kurzname": {
+            "description": "Der Dateinamens-Teil dieses Parts, z. B. 'korpus'. Daraus entstehen cad/source/P001-<slug>-<kurzname>.FCStd und die gleichnamigen Exporte. Quelle ist die Parts-Tabelle der INSTRUCTIONS.md; die Prosa steht in 'name', damit eine Umformulierung keine Dateien umbenennt.",
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
           },
           "name": { "type": "string", "minLength": 2 },
           "description": { "type": "string" },
           "bauform": {
-            "description": "Optional: benennt eine geteilte parametrische Quelle. Baugruppen mit derselben bauform sind dasselbe Ding in anderen Größen (z. B. drei verschieden breite Schubladen als A002/A003/A004 mit bauform = 'schublade') und werden in der Bauanleitung einmal beschrieben.",
+            "description": "Optional: benennt eine geteilte parametrische Quelle. Parts mit derselben bauform sind dasselbe Ding in anderen Größen (z. B. drei verschieden breite Schubladen als P002/P003/P004 mit bauform = 'schublade') und werden in der Bauanleitung einmal beschrieben.",
             "type": "string",
             "pattern": "^[a-z][a-z0-9-]*$"
           },
           "source": {
-            "description": "Pfad zur FreeCAD-Quelldatei der Baugruppe, z. B. 'cad/source/A001-Sideboard.FCStd'.",
+            "description": "Pfad zur FreeCAD-Quelldatei des Parts, z. B. 'cad/source/P001-gehriq-sideboard-korpus.FCStd'.",
             "type": "string"
           },
           "parent": {
-            "description": "Eltern-Baugruppe (nur bei Sub-Baugruppen). Muss eine existierende heimeliq-assembly-id sein.",
+            "description": "Optional. Das Haupt-Part hat keinen parent. Wie die Parts zusammengehoeren, sagt die Baugruppen-Datei A001; parent sagt nur, welches Part das fuehrende ist. Muss eine existierende heimeliq-part-id aus diesem Block sein.",
             "type": "string",
-            "pattern": "^A[0-9]{3}$"
+            "pattern": "^P[0-9]{3}$"
           },
           "optional": {
-            "description": "Ist diese Baugruppe optional (Erweiterung)? Default: false (= Teil des Grundmodells).",
+            "description": "Ist dieses Part optional (Erweiterung)? Default: false (= Teil des Grundmodells).",
             "type": "boolean",
             "default": false
           }
@@ -165,16 +170,16 @@
       }
     },
     "external_parts": {
-      "description": "Externe Drittteile (nicht open source). Jede ID muss mit einem Assembly-Präfix beginnen (z. B. A001.E001).",
+      "description": "Externe Drittteile (nicht open source). Jede ID traegt das Praefix ihres Parts (z. B. P001.E001) - oder A001, wenn es das Teil nur wegen der Zusammenstellung gibt.",
       "type": "array",
       "items": {
         "type": "object",
         "required": ["heimeliq-part-id", "name", "quantity"],
         "properties": {
           "heimeliq-part-id": {
-            "description": "Assembly-präfixierte ID, z. B. 'A001.E001' oder 'A002.E001'. Tieferes Nesting möglich: 'A002.A003.E001'.",
+            "description": "Praefixierte ID, z. B. 'P001.E001' oder 'P002.E001'; 'A001.E001' fuer Teile, die es nur wegen der Zusammenstellung gibt. Kein tieferes Nesting.",
             "type": "string",
-            "pattern": "^(A[0-9]{3}\\.)+E[0-9]{3}$"
+            "pattern": "^[PA][0-9]{3}\\.E[0-9]{3}$"
           },
           "name": { "type": "string" },
           "standard": { "type": "string" },

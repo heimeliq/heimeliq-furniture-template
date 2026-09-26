@@ -28,14 +28,14 @@ Bretter direkt vergleichbar sind.*
 
 | ID | Bezeichnung | Material | Maße (L × B × S, mm) | Anzahl |
 | --- | --- | --- | --- | --- |
-| A001.S001 | FIXME | FIXME | {{ s001_length }} × {{ s001_width }} × {{ s001_thickness }} | {{ s001_quantity }} |
-| A001.S002 | FIXME | FIXME | {{ s002_length }} × {{ s002_width }} × {{ s002_thickness }} | {{ s002_quantity }} |
+| P001.S001 | FIXME | FIXME | {{ s001_length }} × {{ s001_width }} × {{ s001_thickness }} | {{ s001_quantity }} |
+| P001.S002 | FIXME | FIXME | {{ s002_length }} × {{ s002_width }} × {{ s002_thickness }} | {{ s002_quantity }} |
 
 ## Externe Teile (Extern)
 
 | ID | Bezeichnung | Norm/Hersteller | Maße | Anzahl |
 | --- | --- | --- | --- | --- |
-| A001.E001 | FIXME | FIXME | FIXME | {{ e001_quantity }} |
+| P001.E001 | FIXME | FIXME | FIXME | {{ e001_quantity }} |
 
 ## Masse
 

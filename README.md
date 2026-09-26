@@ -117,13 +117,14 @@ Faustregel: **Außenwirkungs-Bilder zentral in `media/`, Doku-Bilder lokal neben
 | Ebene | Schema | Beispiel |
 | --- | --- | --- |
 | Produkt-Repo | `<series>-<type>[-<zusatz>]` | `gehriq-sideboard` |
-| Hauptbaugruppe | `A001` | `A001` |
-| Sub-Baugruppe | `A002`, `A003`, … | `A002` (z. B. Schublade) |
-| Eigenes Bauteil (Self) | `<Baugruppe>.S###` | `A001.S001`, `A002.S001` |
-| Externes Bauteil | `<Baugruppe>.E###` | `A001.E001`, `A002.E001` |
+| Haupt-Part | `P001` | `P001` |
+| Weiteres Part | `P002`, `P003`, … | `P002` (z. B. Schublade) |
+| Baugruppe | `A001` | `A001` (verlinkt die Parts) |
+| Eigenes Bauteil (Self) | `<Part>.S###` | `P001.S001`, `P002.S001` |
+| Externes Bauteil | `<Part>.E###` | `P001.E001`, `P002.E001` |
 | Produkt-Version | SemVer | `1.2.0` |
 
-Bauteil-IDs sind innerhalb des jeweiligen Produkt-Repos eindeutig und immer voll qualifiziert mit Assembly-Präfix. Außerhalb adressiert man sie als `<repo>/<part-id>`.
+Bauteil-IDs sind innerhalb des jeweiligen Produkt-Repos eindeutig und immer voll qualifiziert mit dem Präfix ihres Parts. Außerhalb adressiert man sie als `<repo>/<part-id>`.
 
 Eine **Bauteil-ID bezeichnet eine Bauform, keine Instanz.** Dieselbe ID bedeutet in jeder Variante dasselbe Bauteil; was sich zwischen Varianten unterscheidet, sind nur ihre Zahlen – Maße und Anzahl. Kommen mehrere Größen desselben Bauteils *gleichzeitig* in einem Produkt vor (drei verschieden breite Schubladen), sind das eigene IDs; dass sie nach demselben Bauplan entstehen, sagt das Feld `bauform`.
 
@@ -174,30 +175,32 @@ Die Schlüssel in `[[variants.option]].parameter` sind **identisch mit den Alias
 
 Einen Generator gibt es noch nicht. Bis dahin werden die Referenzvarianten-Dateien von Hand gepflegt; ihr Kopfhinweis („nicht von Hand ändern") gilt für die Zeit danach.
 
-## Baugruppen-Konzept
+## Part- und Baugruppen-Konzept
 
-Jedes heimeliq-Produkt ist als Hierarchie von Baugruppen modelliert:
+Jedes heimeliq-Produkt ist aus Parts modelliert:
 
-- Eine **Baugruppe** ist, was sich als Einheit gegenüber den anderen bewegt oder getrennt montiert wird — Korpus, Tür, Schublade, Deckel. Nicht „was verleimt ist": Ein Klappdeckel ist ein einzelnes Brett und trotzdem eine eigene Baugruppe, weil er sich bewegt; ein fest verschraubter Innenboden ist keine, sondern ein Bauteil des Korpus.
-- **`A001`** ist die erste davon, nicht „das Produkt". Das Produkt ist das Repo und hat keine A-Nummer: Bei einer Box mit Klappdeckel ist `A001` der Korpus, `A002` der Deckel, und das Produkt ist beides zusammen.
-- Vergeben wird in Entstehungsreihenfolge, nie umnummeriert. Sub-Baugruppen referenzieren ihre Eltern-Baugruppe über das Feld `parent`.
-- **Eine Variante ist nie eine Baugruppe.** Ein Sideboard in 1200 und eines in 1600 sind dieselbe Konstruktion mit anderen Zahlen — sie teilen Baugruppen, Bauteile und Bauanleitung. Varianten stehen unter `[variants]`, nicht unter `[[assemblies]]`.
-- Jedes Bauteil gehört zu genau einer Baugruppe und trägt deren Präfix in der ID (`A001.S001`, `A002.E001` usw.).
+- Ein **Part** ist, was sich als Einheit gegenüber den anderen bewegt oder getrennt montiert wird — Korpus, Tür, Schublade, Deckel. Nicht „was verleimt ist": Ein Klappdeckel ist ein einzelnes Brett und trotzdem ein eigenes Part, weil er sich bewegt; ein fest verschraubter Innenboden ist keines, sondern ein Bauteil des Korpus. Nach innen ist ein Part fest gefügt und in FreeCAD ein Assembly aus seinen Bauteilen.
+- **`P001`** ist das erste davon, nicht „das Produkt". Das Produkt ist das Repo: Bei einer Box mit Klappdeckel ist `P001` der Korpus, `P002` der Deckel, und das Produkt ist beides zusammen.
+- Vergeben wird in Entstehungsreihenfolge, nie umnummeriert. Das Haupt-Part hat kein `parent`.
+- Eine **Baugruppe** `A001` verlinkt die Parts zu einer FCStd **ohne** TechDraw-Blatt. Sie wird nicht in der `heimeliq.toml` deklariert; angelegt und exportiert wird sie vom Menschen. `A002` und höher sind dessen Werkbank und bleiben aus `okh.toml`, `bom.md` und README heraus.
+- **Eine Variante ist nie ein Part.** Ein Sideboard in 1200 und eines in 1600 sind dieselbe Konstruktion mit anderen Zahlen — sie teilen Parts, Bauteile und Bauanleitung. Varianten stehen unter `[variants]`, nicht unter `[[parts]]`.
+- Jedes Bauteil gehört zu genau einem Part und trägt dessen Präfix in der ID (`P001.S001`, `P002.E001` usw.). `A001.E001` ist für Teile reserviert, die es nur wegen der Zusammenstellung gibt.
 - **Beschläge gehören dem angebauten Teil**: Die Tür bringt ihre Scharniere mit, die Schublade ihre Schienen, der Deckel seine Dübel. So folgt die Stückzahl dem Bauteil, statt von Hand mitgezählt zu werden.
-- `optional = true` markiert eine Baugruppe als Erweiterung. Solche Baugruppen werden später im Shop zu konfigurierbaren Varianten mit Aufpreis.
-- `bauform` ist optional und benennt eine geteilte parametrische Quelle. Baugruppen mit derselben `bauform` sind dasselbe Ding in anderen Größen **innerhalb eines Produkts**: Enthält ein Sideboard drei verschieden breite Schubladen, sind das `A002`, `A003`, `A004` mit `bauform = "schublade"`, und die Bauanleitung beschreibt die Schublade einmal. Das ist kein Varianten-Mechanismus.
+- `optional = true` markiert ein Part als Erweiterung. Solche Parts werden später im Shop zu konfigurierbaren Varianten mit Aufpreis.
+- `bauform` ist optional und benennt eine geteilte parametrische Quelle. Parts mit derselben `bauform` sind dasselbe Ding in anderen Größen **innerhalb eines Produkts**: Enthält ein Sideboard drei verschieden breite Schubladen, sind das `P002`, `P003`, `P004` mit `bauform = "schublade"`, und die Bauanleitung beschreibt die Schublade einmal. Das ist kein Varianten-Mechanismus.
 
-**Konvention für FreeCAD-Dateien**: Jede Baugruppe ist eine eigene `.FCStd`-Datei, benannt nach Schema `A001-<Name>.FCStd`, `A002-<Name>.FCStd`. Beispiel:
+**Konvention für FreeCAD-Dateien**: Jedes Part ist eine eigene `.FCStd`-Datei, benannt nach Schema `P<Nr>-<slug>-<kurzname>.FCStd`. Der Kurzname steht in der `INSTRUCTIONS.md` des Produkts und gilt für alles, was zu diesem Part gehört — Quelle, STEP, STL und Übersichtsblatt. Beispiel:
 
 ```
 cad/source/
-├── A001-Sideboard.FCStd
-└── A002-Schublade.FCStd
+├── P001-gehriq-sideboard-korpus.FCStd
+├── P002-gehriq-sideboard-schublade.FCStd
+└── A001-gehriq-sideboard-mit-3-schubladen.FCStd   (vom Menschen, ohne Blatt)
 ```
 
-Im OKH-`[[part]]`-Array zeigt das `source`-Feld jedes Bauteils auf die Assembly-Datei, in der das Bauteil definiert ist. Zusätzlich verlinkt das Feld `heimeliq-assembly` die Baugruppe explizit.
+Im OKH-`[[part]]`-Array zeigt das `source`-Feld jedes Bauteils auf die Part-Datei, in der das Bauteil definiert ist. Zusätzlich verlinkt das Feld `heimeliq-parent-part` das Part explizit.
 
-In der Praxis sind zwei Hierarchie-Ebenen (Produkt + direkte Erweiterungen) der Normalfall. Tieferes Nesting (z. B. `A002.A003.S001`) ist technisch erlaubt, aber selten nötig.
+Kein tieferes Nesting: Ein Bauteil gehört genau einem Part, und wie die Parts zusammengehören, sagt die Baugruppe.
 
 ## Mitwirken
 

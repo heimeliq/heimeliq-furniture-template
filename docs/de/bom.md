@@ -19,14 +19,14 @@ Bretter direkt vergleichbar sind.*
 
 | ID | Bezeichnung | Material | Maße (L × B × S, mm) | Anzahl |
 | --- | --- | --- | --- | --- |
-| A001.S001 | FIXME | FIXME | FIXME × FIXME × FIXME | FIXME |
-| A001.S002 | FIXME | FIXME | FIXME × FIXME × FIXME | FIXME |
+| P001.S001 | FIXME | FIXME | FIXME × FIXME × FIXME | FIXME |
+| P001.S002 | FIXME | FIXME | FIXME × FIXME × FIXME | FIXME |
 
 ## Externe Teile (Extern)
 
 | ID | Bezeichnung | Norm/Hersteller | Maße | Anzahl |
 | --- | --- | --- | --- | --- |
-| A001.E001 | FIXME | FIXME | FIXME | FIXME |
+| P001.E001 | FIXME | FIXME | FIXME | FIXME |
 
 ## Masse
 

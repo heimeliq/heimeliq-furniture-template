@@ -14,6 +14,7 @@ Thumbs.db
 
 # Instructions
 instructions/
+.claude/
 
 # Python (für Validierung lokal)
 __pycache__/
