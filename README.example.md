@@ -124,6 +124,16 @@ Siehe [docs/de/care.md](docs/de/care.md).
 - **GLB**: [`cad/exports/`](cad/exports/) (Web-3D-Viewer)
 - **Technische Zeichnungen**: [`cad/drawings/`](cad/drawings/) (PDF)
 
+### Varianten
+
+Die Baugruppen dieses Produkts sind in einer Variantendatei zusammengestellt. **V001** ist das Produkt, das diese README, die Stückliste und die Bauanleitung beschreiben. Weitere Varianten reifen hier, bevor sie vielleicht ein eigenes Produkt werden. Für sie gibt es weder Stückliste noch Bauanleitung.
+
+| ID | Bezeichnung | Datei | Stand |
+| --- | --- | --- | --- |
+| V001 | FIXME | [`cad/source/`](cad/source/) `V001-FIXME.FCStd` | dokumentiert |
+
+<!-- V002 und höher hier ergänzen, mit Stand „in Reifung". Ohne weitere Varianten bleibt es bei der Zeile V001. -->
+
 ### Software
 
 - **FreeCAD** – Open Source, kostenlos – <https://www.freecad.org/>

@@ -1,6 +1,6 @@
 # Migrationsanleitungen
 
-Wenn diese Vorlage auf eine neue **Major-Version** gehoben wird (z. B. `0.x.x` → `1.0.0`), beschreibt dieser Abschnitt, was bestehende Produkt-Repos tun müssen, um auf die neue Vorlagen-Version umzustellen.
+Wenn diese Vorlage eine **brechende Änderung** bekommt — in `0.x` ist das ein MINOR, ab 1.0.0 ein MAJOR —, beschreibt dieser Abschnitt, was bestehende Produkt-Repos tun müssen, um auf die neue Vorlagen-Version umzustellen.
 
 Bestehende Repos werden nicht automatisch migriert – Stabilität geht vor.
 
@@ -12,6 +12,51 @@ Bestehende Repos werden nicht automatisch migriert – Stabilität geht vor.
 4. Im Produkt-Repo `heimeliq.toml` → `heimeliq-template-version` auf neue Version setzen.
 5. Eintrag in `changelog.md` (klein, im Produkt-Repo) ergänzen.
 6. Branch mergen, neuen SemVer-Tag setzen.
+
+---
+
+## 0.9.3 → 0.10.0
+
+**Brechend.** Neu ist die Variante `V00n`: eine FCStd, die Baugruppen verlinkt. `V001`
+ist Pflicht und das dokumentierte Produkt. Dazu bekommt jede Datei einen Kurznamen.
+Das Modell steht in `instructions/reference/produkt-modell.md`.
+
+`A00n` behält Bedeutung, IDs und TechDraw-Blatt. Bestehende Blätter samt ihren
+Bemaßungen bleiben, wie sie sind; nur ihr Export heißt anders.
+
+### Was zu tun ist
+
+1. **`INSTRUCTIONS.md`** (instructions-Repo, auf dem Produkt-Branch): Abschnitt
+   *Dateinamen* aus `INSTRUCTIONS.template.md` anlegen — je Baugruppe und für V001
+   ID, Kurzname und Bezeichnung. Den Kurznamen legt der Mensch fest.
+2. **`heimeliq.toml`**: je `[[assemblies]]` ein `kurzname`, `source` auf den neuen
+   Namen. An der Referenz-Option `heimeliq-variant-id = "V001"`, `kurzname` und
+   `source`.
+3. **Dateien umbenennen**, mit `git mv`:
+   ```
+   cad/source/A001-<slug>.FCStd        → cad/source/A001-<slug>-<kurzname>.FCStd
+   cad/exports/A001-<slug>.step / .stl → cad/exports/A001-<slug>-<kurzname>.step / .stl
+   cad/exports/<slug>-A001-overview.svg → cad/exports/A001-<slug>-<kurzname>-overview.svg
+   ```
+   Die Exporte besser neu erzeugen als umbenennen: `export-bootstrap.py` und
+   `techdraw-export.py` schreiben die neuen Namen selbst.
+4. **V001 anlegen** (Mensch): `cad/source/V001-<slug>-<kurzname>.FCStd`, ein Assembly,
+   das die Baugruppen **als FCStd** verlinkt. Darin `assembly-bootstrap.py`, dann
+   `export-bootstrap.py` für STEP und STL.
+   **Gibt es schon eine Datei, die Baugruppen verlinkt**
+   (`A003-gehriq-schubladenboard.FCStd`), wird sie V001. Ihre Links hängen an den
+   **alten** Dateinamen der Baugruppen und brechen beim Umbenennen aus Schritt 3 —
+   leise, ohne Fehlerdialog. Deshalb Schritt 3 und die Reparatur der Links in einem
+   Zug, und danach prüfen, dass V001 alle Baugruppen zeigt
+   (`instructions/reference/cad-api-rules.md`).
+5. **`okh.toml`**: auf oberster Ebene `source` und `export` der V001 eintragen; je
+   `[[part]]` `source` und `export` auf die neuen Namen.
+6. **README**: Abschnitt *Varianten* aus `README.example.md` übernehmen, V001 eintragen,
+   V002+ mit Stand „in Reifung". Links auf Dateien nachziehen.
+7. `heimeliq-template-version = "0.10.0"` setzen.
+
+**Release:** ein **MINOR** im Produkt-Repo, solange es unter `v1.0.0` steht — an der
+Konstruktion ändert sich nichts, nur Namen und eine neue Datei.
 
 ---
 

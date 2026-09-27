@@ -102,13 +102,39 @@ jobs:
               print(f"variants: FAIL\nreference={ref!r} ist keine der Options-IDs {ids}")
               fail = True
 
+          # 2b. V-Nummern: eindeutig, und die Referenz-Option ist V001. V001 ist
+          #     das dokumentierte Produkt; ohne sie wuesste niemand, welche Datei
+          #     okh.toml und bom.md beschreiben.
+          vids = [o.get("heimeliq-variant-id") for o in options
+                  if o.get("heimeliq-variant-id")]
+          vdupes = sorted({i for i in vids if vids.count(i) > 1})
+          if vdupes:
+              print(f"variants: FAIL\nMehrfach vergebene V-Nummern: {vdupes}")
+              fail = True
+          ref_opt = next((o for o in options if o.get("id") == ref), None)
+          if ref_opt is not None and ref_opt.get("heimeliq-variant-id") != "V001":
+              print(f"variants: FAIL\nDie Referenz-Option {ref!r} traegt "
+                    f"heimeliq-variant-id = {ref_opt.get('heimeliq-variant-id')!r}, "
+                    f"erwartet 'V001'.")
+              fail = True
+          for o in options:
+              if o.get("heimeliq-variant-id") == "V001" and o.get("id") != ref:
+                  print(f"variants: FAIL\nOption {o.get('id')!r} traegt V001, ist "
+                        f"aber nicht die Referenz {ref!r}.")
+                  fail = True
+
           # 3. Die Sperre: alle Optionen haben denselben Parameter-Schluesselsatz.
           #    Nur die Werte duerfen sich unterscheiden. Kommt ein Schluessel dazu
           #    oder faellt einer weg, ist es ein eigenes Produkt und keine Variante.
-          if options:
-              base_id = ids[0]
-              base = set(options[0].get("parameter", {}))
-              for o in options[1:]:
+          #    Ausgenommen sind Optionen mit eigener V-Datei ab V002: Dort reift
+          #    ein kuenftiges Produkt im Repo, und eine andere Zusammenstellung
+          #    ist genau ihr Zweck.
+          gesperrt = [o for o in options
+                      if o.get("heimeliq-variant-id") in (None, "V001")]
+          if gesperrt:
+              base_id = gesperrt[0].get("id")
+              base = set(gesperrt[0].get("parameter", {}))
+              for o in gesperrt[1:]:
                   keys = set(o.get("parameter", {}))
                   if keys != base:
                       extra = sorted(keys - base)

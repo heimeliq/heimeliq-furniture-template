@@ -55,6 +55,14 @@ manufacturing-instructions = "docs/de/build-guide.md"
 bom = "docs/de/bom.md"
 readme = "README.md"
 
+# --- Quell- und Exportdateien des ganzen Produkts ---
+# Die Variante V001 verlinkt die Baugruppen und ist das dokumentierte Produkt
+# (heimeliq.toml -> [variants], Referenz-Option). Ihre Datei und ihre Exporte
+# stehen hier, die Dateien der Baugruppen je Bauteil unter [[part]].
+# V002 und höher gehören nicht in dieses Manifest.
+source = "cad/source/V001-FIXME-slug-FIXME-kurzname.FCStd"
+export = ["cad/exports/V001-FIXME-slug-FIXME-kurzname.step", "cad/exports/V001-FIXME-slug-FIXME-kurzname.stl"]
+
 # ============================================================================
 # SECTIONS
 # ============================================================================
@@ -85,11 +93,12 @@ depicts = "FIXME: kurze Beschreibung des Hauptbildes"
 # EIGENE BAUTEILE (open-source, in OKH-`part`-Array)
 # ============================================================================
 # Jedes Bauteil bekommt eine Produkt-lokale, voll-qualifizierte ID:
-#   A001.S001, A001.S002, ...  (Bauteile der Hauptbaugruppe)
+#   A001.S001, A001.S002, ...  (Bauteile der ersten Baugruppe)
 #   A002.S001, A002.S002, ...  (Bauteile einer Sub-Baugruppe)
 #
 # `source` zeigt auf die FreeCAD-Datei der zugehörigen Baugruppe,
-# in der das Bauteil definiert ist.
+# in der das Bauteil definiert ist, `export` auf deren Exporte — beide heißen
+# A00n-<slug>-<kurzname>, mit dem Kurznamen aus heimeliq.toml [[assemblies]].
 #
 # Externe Drittteile (Schrauben, Beschläge) stehen NICHT hier, sondern in
 # heimeliq.toml unter [[external_parts]].
@@ -106,8 +115,8 @@ depicts = "FIXME: kurze Beschreibung des Hauptbildes"
 
 [[part]]
 name = "FIXME Bauteilname (z. B. Korpus-Seitenwand links)"
-source = "cad/source/A001-FIXME-name.FCStd"
-export = ["cad/exports/A001/FIXME-bauteil-01.step", "cad/exports/A001/FIXME-bauteil-01.stl"]
+source = "cad/source/A001-FIXME-slug-FIXME-kurzname.FCStd"
+export = ["cad/exports/A001-FIXME-slug-FIXME-kurzname.step", "cad/exports/A001-FIXME-slug-FIXME-kurzname.stl"]
 mass = 0
 quantity = 1
 heimeliq-part-id = "A001.S001"
@@ -119,8 +128,8 @@ outer-dimensions = { width = 0, depth = 0, height = 0 }
 # Bei Bedarf entfernen.
 [[part]]
 name = "FIXME Bauteilname in Sub-Baugruppe (z. B. Schubladen-Boden)"
-source = "cad/source/A002-FIXME-name.FCStd"
-export = ["cad/exports/A002/FIXME-bauteil-01.step"]
+source = "cad/source/A002-FIXME-slug-FIXME-kurzname.FCStd"
+export = ["cad/exports/A002-FIXME-slug-FIXME-kurzname.step", "cad/exports/A002-FIXME-slug-FIXME-kurzname.stl"]
 mass = 0
 heimeliq-part-id = "A002.S001"
 heimeliq-assembly = "A002"

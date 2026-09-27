@@ -2,9 +2,53 @@
 
 Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
 
-- **MAJOR** (`x.0.0`): Breaking Change. Bestehende Produkt-Repos brauchen Migration.
-- **MINOR** (`0.x.0`): Neues optionales Feld oder Ordner. Bestehende Repos funktionieren weiter.
+- **MAJOR** (`x.0.0`): Breaking Change — **erst ab 1.0.0**. Solange die Vorlage in
+  `0.x` steht, gehören brechende Änderungen nach SemVer in den MINOR; eine 1.0.0
+  würde behaupten, die Vorlage sei fertig.
+- **MINOR** (`0.x.0`): Neues Feld, neuer Ordner — und in `0.x` auch brechende
+  Änderungen. Was bestehende Repos dann tun müssen, steht in `MIGRATIONS.md`.
 - **PATCH** (`0.0.x`): Tippfehler, Klarstellungen, Bug-Fixes, kein strukturelles Update.
+
+## [0.10.0] – 2026-09-27 – A variant links the assemblies, and the human names the files
+
+Breaking, and in `0.x` that is a MINOR. Existing repos keep working until they are
+migrated; `MIGRATIONS.md` says what to do.
+
+Until now no document knew the whole product, so there was no STEP of the whole
+piece of furniture, and nowhere to let a second product ripen before it gets a
+repo of its own.
+
+**Added:**
+
+- **Variant `V00n`**: an FCStd that links assembly files, made by the human, with
+  STEP and STL export but no TechDraw sheet. It is an option under `[variants]`
+  with `heimeliq-variant-id`, `kurzname` and `source`.
+- **`V001` always exists** and is the reference option — the documented product.
+  `okh.toml`, `bom.md` and `build-guide.md` describe it alone; `okh.toml` names its
+  file and exports at the top level (`source`, `export`). A product made of a
+  single assembly has a V001 that links `A001` alone.
+- **`V002` and up** are the human's workbench for a product that ripens in the
+  repo. They appear only in `heimeliq.toml` and in the product README (new section
+  *Varianten* in `README.example.md`), and they are exempt from the parameter
+  key-set lock. `validate.yml` checks that the reference option carries `V001`
+  and that V numbers are unique.
+- **`kurzname`**, required on every `[[assemblies]]` entry: the file-name segment,
+  set by the human in `INSTRUCTIONS.md`.
+
+**Changed:**
+
+- File names: `A001-<slug>-<kurzname>.FCStd`, and exports named the same —
+  `.step`, `.stl`, `-overview.svg`. The overview SVG loses its reversed order
+  (`<slug>-A001-overview.svg`), and the per-part export folders in the `okh.toml`
+  example (`cad/exports/A001/…`) are gone; nobody produced them.
+- The `kurzname` is a field of its own rather than derived from `name`: a variant
+  links assemblies by file name, so a reworded description must not rename a file.
+- `heimeliq.toml` no longer calls `A001` "the product itself" — it contradicted
+  the comment right above it.
+
+**Unchanged:** `A00n` keeps its meaning, its IDs (`A001.S001`) and its TechDraw
+sheet (`Page_A001`), so hand-made dimensions on existing sheets survive a
+migration.
 
 ## [0.9.3] – 2026-09-24 – A place for the mass, so the manifest can lose its prose
 

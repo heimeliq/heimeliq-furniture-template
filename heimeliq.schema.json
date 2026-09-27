@@ -75,13 +75,13 @@
       }
     },
     "variants": {
-      "description": "Varianten des Produkts: gleiche Bauart, andere Zahlen. Eine Produktvariante darf Maße, Innenaufteilung und Bauteilauswahl unterscheiden. Alle Optionen haben denselben Satz von parameter-Schluesseln - kommt ein Schluessel dazu oder faellt einer weg, ist es ein eigenes Produkt (geprueft in validate.yml). Mindestens eine Option ist Pflicht; ohne Groessenauswahl genau eine (n = 1).",
+      "description": "Varianten des Produkts: gleiche Bauart, andere Zahlen. Eine Produktvariante darf Maße, Innenaufteilung und Bauteilauswahl unterscheiden. Alle Optionen haben denselben Satz von parameter-Schluesseln - kommt ein Schluessel dazu oder faellt einer weg, ist es ein eigenes Produkt (geprueft in validate.yml). Ausgenommen sind Optionen mit eigener V-Datei ab V002: Dort reift ein kuenftiges Produkt im Repo (instructions/reference/produkt-modell.md). Mindestens eine Option ist Pflicht; ohne Groessenauswahl genau eine (n = 1).",
       "type": "object",
       "required": ["reference", "option"],
       "additionalProperties": false,
       "properties": {
         "reference": {
-          "description": "id der Option, die im Repo ausgerechnet vorliegt. Muss einer option.id entsprechen.",
+          "description": "id der Option, die im Repo ausgerechnet vorliegt und dokumentiert wird. Muss einer option.id entsprechen, und diese Option traegt heimeliq-variant-id = 'V001' (geprueft in validate.yml).",
           "type": "string",
           "pattern": "^[a-z0-9][a-z0-9-]*$"
         },
@@ -91,8 +91,25 @@
           "items": {
             "type": "object",
             "required": ["id", "label", "parameter", "parts"],
+            "dependencies": {
+              "heimeliq-variant-id": ["kurzname", "source"]
+            },
             "additionalProperties": false,
             "properties": {
+              "heimeliq-variant-id": {
+                "description": "Optional: V-Nummer der Option, wenn sie eine eigene FCStd hat, die Baugruppen verlinkt. V001 ist die Referenzoption und das dokumentierte Produkt - Pflicht, auch wenn sie nur A001 verlinkt. V002 und hoeher legt der Mensch fuer ein Produkt an, das im Repo reift; sie stehen nur hier und in der README und sind von der Schluesselsatz-Sperre ausgenommen. Reine Groessen-Optionen haben keine V-Nummer.",
+                "type": "string",
+                "pattern": "^V[0-9]{3}$"
+              },
+              "kurzname": {
+                "description": "Dateinamens-Teil der V-Datei, z. B. 'mit-3-schubladen' -> cad/source/V001-<slug>-mit-3-schubladen.FCStd und die gleichnamigen Exporte. Quelle ist die Tabelle Dateinamen der INSTRUCTIONS.md.",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "source": {
+                "description": "Pfad zur V-Datei, z. B. 'cad/source/V001-gehriq-schubladenboard-mit-3-schubladen.FCStd'.",
+                "type": "string"
+              },
               "id": {
                 "description": "Frei gewaehlter Name der Variante, lowercase, ASCII. Erlaubt sind Maßangaben ('1200x800'), Aufteilungsraster ('3x4x3') und Woerter ('klein') gleichermaßen. Muss innerhalb des Produkts eindeutig sein (geprueft in validate.yml).",
                 "type": "string",
@@ -104,7 +121,7 @@
                 "minLength": 1
               },
               "parameter": {
-                "description": "Freie Eingangswerte: Alias-Name der FreeCAD-Spreadsheet-Zelle -> Zahl. Bauteilmaße und Stueckzahlen stehen hier NICHT - die leitet der Generator daraus ab. Der Schluesselsatz ist ueber alle Optionen identisch.",
+                "description": "Freie Eingangswerte: Alias-Name der FreeCAD-Spreadsheet-Zelle -> Zahl. Bauteilmaße und Stueckzahlen stehen hier NICHT - die leitet der Generator daraus ab. Der Schluesselsatz ist ueber alle Optionen identisch; ausgenommen sind Optionen mit V-Nummer ab V002.",
                 "type": "object",
                 "additionalProperties": { "type": "number" }
               },
@@ -133,12 +150,17 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["heimeliq-assembly-id", "name"],
+        "required": ["heimeliq-assembly-id", "kurzname", "name"],
         "properties": {
           "heimeliq-assembly-id": {
-            "description": "Produkt-lokale Assembly-ID, z. B. 'A001' (Hauptbaugruppe), 'A002', ...",
+            "description": "Produkt-lokale Assembly-ID, z. B. 'A001' (erste Baugruppe, nicht das Produkt), 'A002', ...",
             "type": "string",
             "pattern": "^A[0-9]{3}$"
+          },
+          "kurzname": {
+            "description": "Dateinamens-Teil dieser Baugruppe, z. B. 'korpus' -> cad/source/A001-<slug>-korpus.FCStd und die gleichnamigen Exporte (.step, .stl, -overview.svg). Quelle ist die Tabelle Dateinamen der INSTRUCTIONS.md. Ein eigenes Feld, damit eine umformulierte Bezeichnung keine Datei umbenennt - und damit keinen Link einer V-Datei bricht.",
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
           },
           "name": { "type": "string", "minLength": 2 },
           "description": { "type": "string" },
@@ -148,7 +170,7 @@
             "pattern": "^[a-z][a-z0-9-]*$"
           },
           "source": {
-            "description": "Pfad zur FreeCAD-Quelldatei der Baugruppe, z. B. 'cad/source/A001-Sideboard.FCStd'.",
+            "description": "Pfad zur FreeCAD-Quelldatei der Baugruppe, z. B. 'cad/source/A001-gehriq-sideboard-korpus.FCStd'.",
             "type": "string"
           },
           "parent": {
