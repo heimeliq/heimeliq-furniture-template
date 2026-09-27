@@ -60,8 +60,8 @@ readme = "README.md"
 # (heimeliq.toml -> [variants], Referenz-Option). Ihre Datei und ihre Exporte
 # stehen hier, die Dateien der Baugruppen je Bauteil unter [[part]].
 # V002 und höher gehören nicht in dieses Manifest.
-source = "cad/source/V001-FIXME-slug-FIXME-kurzname.FCStd"
-export = ["cad/exports/V001-FIXME-slug-FIXME-kurzname.step", "cad/exports/V001-FIXME-slug-FIXME-kurzname.stl"]
+source = "cad/source/V001-FIXME-slug.FCStd"
+export = ["cad/exports/V001-FIXME-slug.step", "cad/exports/V001-FIXME-slug.stl"]
 
 # ============================================================================
 # SECTIONS

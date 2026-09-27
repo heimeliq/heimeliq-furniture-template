@@ -173,7 +173,7 @@ Ein Produkt ohne Größenauswahl hat genau eine `[[variants.option]]`, die zugle
 
 ### Varianten mit eigener Datei (V-Nummer)
 
-Eine Option kann eine **eigene FreeCAD-Datei** haben, die die Baugruppen verlinkt: `cad/source/V001-<slug>-<kurzname>.FCStd`. Sie legt der Mensch an, sie hat kein TechDraw-Blatt, aber STEP- und STL-Export — das ist der Export des ganzen Möbels.
+Eine Option kann eine **eigene FreeCAD-Datei** haben, die die Baugruppen verlinkt: `cad/source/V001-<slug>.FCStd`, bei Bedarf mit Kurznamen dahinter. Sie legt der Mensch an, sie hat kein TechDraw-Blatt, aber STEP- und STL-Export — das ist der Export des ganzen Möbels.
 
 - **`V001` gibt es immer.** Sie ist die Referenz-Option und das dokumentierte Produkt: `okh.toml`, `bom.md` und `build-guide.md` beschreiben nur sie. Auch ein Produkt aus einer einzigen Baugruppe hat eine V001, die nur `A001` verlinkt — eine Datei mehr, dafür keine Sonderregel.
 - **`V002` und höher** sind die Werkbank für ein Produkt, das in diesem Repo reift, bevor es ein eigenes bekommt. Sie stehen nur in der `heimeliq.toml` und in der README des Produkts (Abschnitt *Varianten*), und für sie gilt die Schlüsselsatz-Sperre nicht: Eine andere Zusammenstellung ist gerade ihr Zweck. Eine Änderung nur an ihnen ist höchstens ein MINOR-Release.
@@ -204,11 +204,11 @@ Jedes heimeliq-Produkt ist als Hierarchie von Baugruppen modelliert:
 cad/source/
 ├── A001-gehriq-sideboard-korpus.FCStd
 ├── A002-gehriq-sideboard-schublade.FCStd
-└── V001-gehriq-sideboard-mit-3-schubladen.FCStd    (vom Menschen, ohne Blatt)
+└── V001-gehriq-sideboard.FCStd                     (vom Menschen, ohne Blatt, Kurzname optional)
 cad/exports/
 ├── A001-gehriq-sideboard-korpus.step / .stl / -overview.svg
 ├── A002-gehriq-sideboard-schublade.step / .stl / -overview.svg
-└── V001-gehriq-sideboard-mit-3-schubladen.step / .stl
+└── V001-gehriq-sideboard.step / .stl
 ```
 
 Im OKH-`[[part]]`-Array zeigt das `source`-Feld jedes Bauteils auf die Assembly-Datei, in der das Bauteil definiert ist. Zusätzlich verlinkt das Feld `heimeliq-assembly` die Baugruppe explizit. Auf oberster Ebene nennen `source` und `export` die V001-Datei und ihre Exporte.

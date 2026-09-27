@@ -16,7 +16,7 @@
 
 # Version dieser Vorlage, auf der das Produkt-Repo basiert.
 # Wird bei jedem Template-Upgrade aktualisiert (siehe MIGRATIONS.md).
-heimeliq-template-version = "0.10.0"
+heimeliq-template-version = "0.10.1"
 
 # Version dieses Produkts (SemVer).
 # Erhöhen bei: PATCH = Doku-Fixes, MINOR = neue Optionen, MAJOR = Konstruktionsänderung.
@@ -131,10 +131,12 @@ status = []                            # "draft" | "published" | "archived"
 #     reift, bevor es ein eigenes bekommt. Sie stehen nur hier und in der
 #     README und sind von der Schlüsselsatz-Sperre ausgenommen.
 #   - Reine Größen-Optionen haben keine V-Nummer und keine eigene Datei.
-# Mit V-Nummer sind `kurzname` und `source` Pflicht. Der Kurzname kommt aus der
-# Tabelle "Dateinamen" der INSTRUCTIONS.md:
-#   cad/source/V001-<slug>-<kurzname>.FCStd
-#   cad/exports/V001-<slug>-<kurzname>.step / .stl
+# Mit V-Nummer ist `source` Pflicht, `kurzname` optional: V001 ist das Produkt
+# selbst und heißt schlicht V001-<slug>. Ein Kurzname kommt aus der Tabelle
+# "Dateinamen" der INSTRUCTIONS.md:
+#   cad/source/V001-<slug>.FCStd                  (ohne Kurzname)
+#   cad/source/V002-<slug>-<kurzname>.FCStd       (mit Kurzname)
+#   cad/exports/ — dieselben Namen, .step / .stl
 
 [variants]
 reference = "FIXME"                    # id einer der folgenden Optionen
@@ -143,8 +145,8 @@ reference = "FIXME"                    # id einer der folgenden Optionen
 id = "FIXME"                           # frei gewählt, lowercase, ohne Umlaute; z. B. "klein", "1200x800", "3x4x3"
 label = "FIXME"                        # Anzeigeform, z. B. "40 × 30 cm"
 heimeliq-variant-id = "V001"           # Pflicht an der Referenz-Option
-kurzname = "FIXME"                     # z. B. "mit-3-schubladen" — wird Teil des Dateinamens
-source = "cad/source/V001-FIXME-slug-FIXME-kurzname.FCStd"
+# kurzname = "mit-3-schubladen"         # optional, wird Teil des Dateinamens
+source = "cad/source/V001-FIXME-slug.FCStd"
 parameter = { }                        # Alias-Name = Zahl, z. B. { length = 400, width = 300, FaecherMitte = 3 }
 parts = ["A001.S001"]                  # FIXME: alle Bauteil-IDs dieser Variante
 
