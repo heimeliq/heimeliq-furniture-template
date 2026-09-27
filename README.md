@@ -117,8 +117,9 @@ Faustregel: **Außenwirkungs-Bilder zentral in `media/`, Doku-Bilder lokal neben
 | Ebene | Schema | Beispiel |
 | --- | --- | --- |
 | Produkt-Repo | `<series>-<type>[-<zusatz>]` | `gehriq-sideboard` |
-| Hauptbaugruppe | `A001` | `A001` |
-| Sub-Baugruppe | `A002`, `A003`, … | `A002` (z. B. Schublade) |
+| Variante mit eigener Datei | `V001`, `V002`, … | `V001` (das dokumentierte Produkt) |
+| Erste Baugruppe | `A001` | `A001` (z. B. Korpus) |
+| Weitere Baugruppe | `A002`, `A003`, … | `A002` (z. B. Schublade) |
 | Eigenes Bauteil (Self) | `<Baugruppe>.S###` | `A001.S001`, `A002.S001` |
 | Externes Bauteil | `<Baugruppe>.E###` | `A001.E001`, `A002.E001` |
 | Produkt-Version | SemVer | `1.2.0` |
@@ -170,6 +171,16 @@ Daraus folgt eine dreistufige Dokumentation:
 
 Ein Produkt ohne Größenauswahl hat genau eine `[[variants.option]]`, die zugleich `reference` ist (n = 1). Kein Sonderfall.
 
+### Varianten mit eigener Datei (V-Nummer)
+
+Eine Option kann eine **eigene FreeCAD-Datei** haben, die die Baugruppen verlinkt: `cad/source/V001-<slug>-<kurzname>.FCStd`. Sie legt der Mensch an, sie hat kein TechDraw-Blatt, aber STEP- und STL-Export — das ist der Export des ganzen Möbels.
+
+- **`V001` gibt es immer.** Sie ist die Referenz-Option und das dokumentierte Produkt: `okh.toml`, `bom.md` und `build-guide.md` beschreiben nur sie. Auch ein Produkt aus einer einzigen Baugruppe hat eine V001, die nur `A001` verlinkt — eine Datei mehr, dafür keine Sonderregel.
+- **`V002` und höher** sind die Werkbank für ein Produkt, das in diesem Repo reift, bevor es ein eigenes bekommt. Sie stehen nur in der `heimeliq.toml` und in der README des Produkts (Abschnitt *Varianten*), und für sie gilt die Schlüsselsatz-Sperre nicht: Eine andere Zusammenstellung ist gerade ihr Zweck. Eine Änderung nur an ihnen ist höchstens ein MINOR-Release.
+- Reine Größen-Optionen haben **keine** V-Nummer und keine eigene Datei.
+
+Die V-Datei verlinkt die Baugruppen **als FCStd**, nicht ihre STEP- oder STL-Exporte: Ein importierter STEP ist ein toter Solid, ein STL ein Netz. Der Link zieht jede Änderung nach — und bricht, wenn eine Baugruppen-Datei umbenannt wird. Deshalb stehen die Dateinamen fest (`kurzname`, siehe unten).
+
 Die Schlüssel in `[[variants.option]].parameter` sind **identisch mit den Alias-Namen der Zellen im FreeCAD-Spreadsheet**. Derselbe Name adressiert dieselbe Größe in CAD und Doku. Dort stehen nur die freien **Eingangswerte** – Bauteilmaße und Stückzahlen leitet der Generator daraus ab und werden nicht doppelt gepflegt.
 
 Einen Generator gibt es noch nicht. Bis dahin werden die Referenzvarianten-Dateien von Hand gepflegt; ihr Kopfhinweis („nicht von Hand ändern") gilt für die Zeit danach.
@@ -187,15 +198,20 @@ Jedes heimeliq-Produkt ist als Hierarchie von Baugruppen modelliert:
 - `optional = true` markiert eine Baugruppe als Erweiterung. Solche Baugruppen werden später im Shop zu konfigurierbaren Varianten mit Aufpreis.
 - `bauform` ist optional und benennt eine geteilte parametrische Quelle. Baugruppen mit derselben `bauform` sind dasselbe Ding in anderen Größen **innerhalb eines Produkts**: Enthält ein Sideboard drei verschieden breite Schubladen, sind das `A002`, `A003`, `A004` mit `bauform = "schublade"`, und die Bauanleitung beschreibt die Schublade einmal. Das ist kein Varianten-Mechanismus.
 
-**Konvention für FreeCAD-Dateien**: Jede Baugruppe ist eine eigene `.FCStd`-Datei, benannt nach Schema `A001-<Name>.FCStd`, `A002-<Name>.FCStd`. Beispiel:
+**Konvention für FreeCAD-Dateien**: Jede Baugruppe ist eine eigene `.FCStd`-Datei, benannt `<ID>-<slug>-<kurzname>.FCStd`; ihre Exporte heißen genauso. Den Kurznamen (klein, ASCII, Wörter mit Bindestrich) legt der Mensch fest, er steht als `kurzname` in `[[assemblies]]` bzw. an der Option. Beispiel:
 
 ```
 cad/source/
-├── A001-Sideboard.FCStd
-└── A002-Schublade.FCStd
+├── A001-gehriq-sideboard-korpus.FCStd
+├── A002-gehriq-sideboard-schublade.FCStd
+└── V001-gehriq-sideboard-mit-3-schubladen.FCStd    (vom Menschen, ohne Blatt)
+cad/exports/
+├── A001-gehriq-sideboard-korpus.step / .stl / -overview.svg
+├── A002-gehriq-sideboard-schublade.step / .stl / -overview.svg
+└── V001-gehriq-sideboard-mit-3-schubladen.step / .stl
 ```
 
-Im OKH-`[[part]]`-Array zeigt das `source`-Feld jedes Bauteils auf die Assembly-Datei, in der das Bauteil definiert ist. Zusätzlich verlinkt das Feld `heimeliq-assembly` die Baugruppe explizit.
+Im OKH-`[[part]]`-Array zeigt das `source`-Feld jedes Bauteils auf die Assembly-Datei, in der das Bauteil definiert ist. Zusätzlich verlinkt das Feld `heimeliq-assembly` die Baugruppe explizit. Auf oberster Ebene nennen `source` und `export` die V001-Datei und ihre Exporte.
 
 In der Praxis sind zwei Hierarchie-Ebenen (Produkt + direkte Erweiterungen) der Normalfall. Tieferes Nesting (z. B. `A002.A003.S001`) ist technisch erlaubt, aber selten nötig.
 
