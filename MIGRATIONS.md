@@ -34,6 +34,9 @@ belegt, und für die wirkliche Baugruppe blieb keiner.
    entsprechend. **Neues Pflichtfeld `kurzname`** je Part: klein, ASCII, ohne
    Leerzeichen — es wird Teil des Dateinamens. Quelle ist die neue Parts-Tabelle
    der `INSTRUCTIONS.md`.
+   `name` wird auf die Bezeichnung des Parts gekürzt: `"Korpus"` statt
+   `"gehriq Box mit Klappdeckel (Korpus)"`. Das Schriftfeld setzt den
+   Produktnamen selbst darunter; die alte Klammer-Konvention ist weg.
    `[[external_parts]]`: `A001.E001` → `P001.E001`.
    `[variants.option].parts`: `A001.S001` → `P001.S001`.
 2. **`okh.toml`**: `heimeliq-part-id` → `P001.S001`, `heimeliq-assembly` →

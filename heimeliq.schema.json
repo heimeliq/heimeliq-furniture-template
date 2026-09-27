@@ -145,8 +145,15 @@
             "type": "string",
             "pattern": "^[a-z0-9-]+$"
           },
-          "name": { "type": "string", "minLength": 2 },
-          "description": { "type": "string" },
+          "name": {
+            "description": "Bezeichnung dieses Parts, z. B. 'Korpus' oder 'Schublade' - nur das Part, nicht das Produkt davor. Sie steht im Schriftfeld des TechDraw-Blattes ueber dem Produktnamen, der aus 'name' im Kopf dieser Datei kommt. Der Dateiname haengt nicht daran, sondern an 'kurzname'.",
+            "type": "string",
+            "minLength": 2
+          },
+          "description": {
+            "description": "Optional: ein oder zwei Saetze zu diesem Part, wenn die Bezeichnung nicht genuegt. Erscheint nicht auf dem Blatt.",
+            "type": "string"
+          },
           "bauform": {
             "description": "Optional: benennt eine geteilte parametrische Quelle. Parts mit derselben bauform sind dasselbe Ding in anderen Größen (z. B. drei verschieden breite Schubladen als P002/P003/P004 mit bauform = 'schublade') und werden in der Bauanleitung einmal beschrieben.",
             "type": "string",

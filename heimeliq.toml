@@ -16,7 +16,7 @@
 
 # Version dieser Vorlage, auf der das Produkt-Repo basiert.
 # Wird bei jedem Template-Upgrade aktualisiert (siehe MIGRATIONS.md).
-heimeliq-template-version = "0.10.0"
+heimeliq-template-version = "0.10.1"
 
 # Version dieses Produkts (SemVer).
 # Erhöhen bei: PATCH = Doku-Fixes, MINOR = neue Optionen, MAJOR = Konstruktionsänderung.
@@ -158,6 +158,10 @@ parts = ["P001.S001"]                  # FIXME: alle Bauteil-IDs dieser Variante
 # `kurzname` ist der Dateinamens-Teil: klein, ASCII, ohne Leerzeichen. Quelle
 # ist die Parts-Tabelle der INSTRUCTIONS.md. Die Prosa steht in `name`, damit
 # eine Umformulierung keine Dateien umbenennt.
+#
+# `name` ist die Bezeichnung des Parts allein — "Korpus", nicht
+# "gehriq Box mit Klappdeckel (Korpus)". Den Produktnamen trägt `name` im Kopf
+# dieser Datei; das Schriftfeld des Blattes setzt beides übereinander.
 #
 # `bauform` ist optional und benennt eine geteilte parametrische Quelle.
 # Parts mit derselben `bauform` sind dasselbe Ding in anderen Größen

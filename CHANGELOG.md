@@ -9,6 +9,20 @@ Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   Änderungen. Was bestehende Repos tun müssen, steht dann in `MIGRATIONS.md`.
 - **PATCH** (`0.0.x`): Tippfehler, Klarstellungen, Bug-Fixes, kein strukturelles Update.
 
+## [0.10.1] – 2026-09-27 – What a part's name says
+
+`name` of a `[[parts]]` entry had no description in the schema at all, and
+0.10.0 left it that way while the helpers started reading it as the part's
+plain designation.
+
+- `heimeliq.schema.json`: `name` is the designation of that part alone —
+  "Korpus", not "gehriq Box mit Klappdeckel (Korpus)". The product name comes
+  from `name` at the top of the file, and the title block puts one above the
+  other. `description` is described as well.
+- `MIGRATIONS.md`: the 0.10.0 list now says to shorten `name` when migrating.
+  The parenthesis convention is gone — it used to yield "Hauptbaugruppe" in the
+  title block of a tray that had no parentheses.
+
 ## [0.10.0] – 2026-09-26 – A becomes P, and A becomes the linked assembly
 
 Breaking, and in `0.x` that is a MINOR. Existing repos keep working until they are
