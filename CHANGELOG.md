@@ -9,6 +9,15 @@ Versionierung folgt [Semantic Versioning](https://semver.org/lang/de/).
   Änderungen. Was bestehende Repos dann tun müssen, steht in `MIGRATIONS.md`.
 - **PATCH** (`0.0.x`): Tippfehler, Klarstellungen, Bug-Fixes, kein strukturelles Update.
 
+## [0.10.1] – 2026-09-27 – A variant may do without a Kurzname
+
+`V001` is the product itself, so `V001-<slug>.FCStd` is a fitting name. 0.10.0
+demanded a `kurzname` on every option with a V number; it is optional now, and
+`source` alone is required. An assembly still needs its `kurzname`.
+
+The first migrated product showed it: the file was saved as
+`V001-gehriq-stiftebecher.FCStd`, and the exports should carry the same name.
+
 ## [0.10.0] – 2026-09-27 – A variant links the assemblies, and the human names the files
 
 Breaking, and in `0.x` that is a MINOR. Existing repos keep working until they are

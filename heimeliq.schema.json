@@ -92,7 +92,7 @@
             "type": "object",
             "required": ["id", "label", "parameter", "parts"],
             "dependencies": {
-              "heimeliq-variant-id": ["kurzname", "source"]
+              "heimeliq-variant-id": ["source"]
             },
             "additionalProperties": false,
             "properties": {
@@ -102,12 +102,12 @@
                 "pattern": "^V[0-9]{3}$"
               },
               "kurzname": {
-                "description": "Dateinamens-Teil der V-Datei, z. B. 'mit-3-schubladen' -> cad/source/V001-<slug>-mit-3-schubladen.FCStd und die gleichnamigen Exporte. Quelle ist die Tabelle Dateinamen der INSTRUCTIONS.md.",
+                "description": "Optional: Dateinamens-Teil der V-Datei, z. B. 'mit-3-schubladen' -> cad/source/V001-<slug>-mit-3-schubladen.FCStd und die gleichnamigen Exporte. Ohne Kurzname heisst die Datei V001-<slug>.FCStd - V001 ist das Produkt selbst und braucht keinen. Quelle ist die Tabelle Dateinamen der INSTRUCTIONS.md.",
                 "type": "string",
                 "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
               },
               "source": {
-                "description": "Pfad zur V-Datei, z. B. 'cad/source/V001-gehriq-schubladenboard-mit-3-schubladen.FCStd'.",
+                "description": "Pfad zur V-Datei, z. B. 'cad/source/V001-gehriq-stiftebecher.FCStd' oder 'cad/source/V002-gehriq-schubladenboard-mit-3-schubladen.FCStd'.",
                 "type": "string"
               },
               "id": {

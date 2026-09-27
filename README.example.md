@@ -130,7 +130,7 @@ Die Baugruppen dieses Produkts sind in einer Variantendatei zusammengestellt. **
 
 | ID | Bezeichnung | Datei | Stand |
 | --- | --- | --- | --- |
-| V001 | FIXME | [`cad/source/`](cad/source/) `V001-FIXME.FCStd` | dokumentiert |
+| V001 | FIXME | [`cad/source/`](cad/source/) `V001-FIXME-slug.FCStd` | dokumentiert |
 
 <!-- V002 und höher hier ergänzen, mit Stand „in Reifung". Ohne weitere Varianten bleibt es bei der Zeile V001. -->
 

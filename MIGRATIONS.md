@@ -15,6 +15,14 @@ Bestehende Repos werden nicht automatisch migriert – Stabilität geht vor.
 
 ---
 
+## 0.10.0 → 0.10.1
+
+Kein Breaking Change. Der `kurzname` an einer Option mit V-Nummer ist optional;
+V001 darf `V001-<slug>.FCStd` heißen. Nur `heimeliq-template-version = "0.10.1"`
+setzen und `heimeliq.schema.json` aus der Vorlage übernehmen.
+
+---
+
 ## 0.9.3 → 0.10.0
 
 **Brechend.** Neu ist die Variante `V00n`: eine FCStd, die Baugruppen verlinkt. `V001`
